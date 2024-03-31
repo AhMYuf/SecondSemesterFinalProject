@@ -1,4 +1,4 @@
 package org.example.files.classes;
 
-public class DailyTasks {
+public class DailyTasks extends Task {
 }

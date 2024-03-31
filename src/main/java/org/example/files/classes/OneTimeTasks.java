@@ -6,7 +6,7 @@ import org.example.files.classes.reference.LevelOfImportance;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class OneTimeTasks {
+public class OneTimeTasks extends Task {
     private static int nextId = 1;
     private String taskId;
     private String taskName;
@@ -28,6 +28,7 @@ public class OneTimeTasks {
         //empty constructor
     }
 
+    @Override
     public void addingTags(String tag) { // this code has to also add the entered tag into a backup file
         if (tag == null || tag.isEmpty()) {
             System.out.println("Invalid tag. Please provide a non-empty tag.");
@@ -41,30 +42,6 @@ public class OneTimeTasks {
             System.out.println("Tag added successfully!");
         }
     }
-
-    public void removingTags(String tag) { // this code has to also remove the entered tag into a backup file
-        if (listOfTags.isEmpty()) {
-            System.out.println("There are no tags to be removed.");
-            return;
-        }
-
-        boolean removed = false;
-        Iterator<String> iterator = listOfTags.iterator();
-        while (iterator.hasNext()) {
-            String currentTag = iterator.next();
-            if (tag.equalsIgnoreCase(currentTag)) {
-                iterator.remove();
-                removed = true;
-            }
-        }
-
-        if (removed) {
-            System.out.println("Tag removed successfully!");
-        } else {
-            System.out.println("The tag could not be removed as it does not exist.");
-        }
-    }
-
 
     public String getTaskName() {
         return taskName;
@@ -104,5 +81,29 @@ public class OneTimeTasks {
 
     public void setListOfTags(ArrayList<String> listOfTags) {
         this.listOfTags = listOfTags;
+    }
+
+    @Override
+    public void removingTag(String tag) { // this code has to also remove the entered tag into a backup file
+        if (listOfTags.isEmpty()) {
+            System.out.println("There are no tags to be removed.");
+            return;
+        }
+
+        boolean removed = false;
+        Iterator<String> iterator = listOfTags.iterator();
+        while (iterator.hasNext()) {
+            String currentTag = iterator.next();
+            if (tag.equalsIgnoreCase(currentTag)) {
+                iterator.remove();
+                removed = true;
+            }
+        }
+
+        if (removed) {
+            System.out.println("Tag removed successfully!");
+        } else {
+            System.out.println("The tag could not be removed as it does not exist.");
+        }
     }
 }
