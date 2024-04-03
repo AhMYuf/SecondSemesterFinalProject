@@ -1,5 +1,4 @@
-package org.example.files.classes;
-
+package org.example.files.classes.tasks;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 
@@ -11,14 +10,18 @@ public class OneTimeTasks extends Task {
     private String taskId;
     private String taskName;
     private String shortDescription;
+    private String date;
+    private String time;
     private LevelOfImportance levelOfImportance;
     private CompletionStatus completionStatus;
     private ArrayList<String> listOfTags;
 
-    public OneTimeTasks(String taskName, String shortDescription, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listOfTags) {
+    public OneTimeTasks(String taskName, String shortDescription, String date, String time, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listOfTags) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
+        this.date = date;
+        this.time = time;
         this.levelOfImportance = levelOfImportance;
         this.completionStatus = completionStatus;
         this.listOfTags = listOfTags;
@@ -28,18 +31,45 @@ public class OneTimeTasks extends Task {
         //empty constructor
     }
 
+
+//    public boolean isDateValid(String date) {
+//
+//    }
+
     @Override
     public void addingTags(String tag) { // this code has to also add the entered tag into a backup file
         if (tag == null || tag.isEmpty()) {
             System.out.println("Invalid tag. Please provide a non-empty tag.");
             return;
         }
-
         if (listOfTags.contains(tag)) {
             System.out.println("The tag already exists.");
         } else {
             listOfTags.add(tag);
             System.out.println("Tag added successfully!");
+        }
+    }
+
+    @Override
+    public void removingTag(String tag) { // this code has to also remove the entered tag into a backup file
+        if (listOfTags.isEmpty()) {
+            System.out.println("There are no tags to be removed.");
+            return;
+        }
+
+        boolean removed = false;
+        Iterator<String> iterator = listOfTags.iterator();
+        while (iterator.hasNext()) {
+            String currentTag = iterator.next();
+            if (tag.equalsIgnoreCase(currentTag)) {
+                iterator.remove();
+                removed = true;
+            }
+        }
+        if (removed) {
+            System.out.println("Tag removed successfully!");
+        } else {
+            System.out.println("The tag could not be removed as it does not exist.");
         }
     }
 
@@ -83,27 +113,5 @@ public class OneTimeTasks extends Task {
         this.listOfTags = listOfTags;
     }
 
-    @Override
-    public void removingTag(String tag) { // this code has to also remove the entered tag into a backup file
-        if (listOfTags.isEmpty()) {
-            System.out.println("There are no tags to be removed.");
-            return;
-        }
 
-        boolean removed = false;
-        Iterator<String> iterator = listOfTags.iterator();
-        while (iterator.hasNext()) {
-            String currentTag = iterator.next();
-            if (tag.equalsIgnoreCase(currentTag)) {
-                iterator.remove();
-                removed = true;
-            }
-        }
-
-        if (removed) {
-            System.out.println("Tag removed successfully!");
-        } else {
-            System.out.println("The tag could not be removed as it does not exist.");
-        }
-    }
 }

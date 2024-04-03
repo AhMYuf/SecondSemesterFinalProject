@@ -1,4 +1,4 @@
-package org.example.files.classes;
+package org.example.files.classes.tasks;
 
 abstract class Task {
 
@@ -9,6 +9,4 @@ abstract class Task {
     public void addingTags(String tag) {
 
     }
-
-
 }
