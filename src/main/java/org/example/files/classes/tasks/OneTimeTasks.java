@@ -1,4 +1,5 @@
 package org.example.files.classes.tasks;
+import org.example.files.classes.DateAndTime;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 
@@ -12,16 +13,15 @@ public class OneTimeTasks extends Task {
     private String shortDescription;
     private String date;
     private String time;
-    private LevelOfImportance levelOfImportance;
-    private CompletionStatus completionStatus;
-    private ArrayList<String> listOfTags;
+
+    private DateAndTime dateAndTime;
 
     public OneTimeTasks(String taskName, String shortDescription, String date, String time, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listOfTags) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
-        this.date = date;
-        this.time = time;
+        this.date = String.valueOf(dateAndTime.getDate());
+        this.time = String.valueOf(dateAndTime.getTime());
         this.levelOfImportance = levelOfImportance;
         this.completionStatus = completionStatus;
         this.listOfTags = listOfTags;
@@ -31,10 +31,6 @@ public class OneTimeTasks extends Task {
         //empty constructor
     }
 
-
-//    public boolean isDateValid(String date) {
-//
-//    }
 
     @Override
     public void addingTags(String tag) { // this code has to also add the entered tag into a backup file
@@ -48,6 +44,25 @@ public class OneTimeTasks extends Task {
             listOfTags.add(tag);
             System.out.println("Tag added successfully!");
         }
+    }
+
+    @Override
+    public String setDate(String date, String pattern) {
+        if (dateAndTime.dateExists(date, pattern)) {
+            if (dateAndTime.dateValidToday(date)) {
+                this.date = date;
+                return "Date set successfully.";
+            } else {
+                return "The date has already passed.";
+            }
+        } else {
+            return "The entered date does not exist.";
+        }
+    }
+
+    @Override
+    void setTime(String start, String end) {
+
     }
 
     @Override

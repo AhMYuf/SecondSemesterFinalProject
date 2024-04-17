@@ -6,10 +6,6 @@ public class Tags {
 
     private ArrayList<String> listOfTags;
 
-//    public Tags() {
-//        listOfTags = new ArrayList<>();
-//    }
-
     public void addTag(String tag) {
         if (tag != null && !listOfTags.contains(tag.toUpperCase())) {
             listOfTags.add(tag.toUpperCase());
