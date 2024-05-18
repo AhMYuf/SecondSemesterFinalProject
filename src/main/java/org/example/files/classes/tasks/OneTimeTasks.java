@@ -2,7 +2,11 @@ package org.example.files.classes.tasks;
 import org.example.files.classes.DateAndTime;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
+import org.example.files.classes.reference.Tags;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,10 +17,10 @@ public class OneTimeTasks extends Task {
     private String shortDescription;
     private String date;
     private String time;
+    public Tags tags;
+    public DateAndTime dateAndTime;
 
-    private DateAndTime dateAndTime;
-
-    public OneTimeTasks(String taskName, String shortDescription, String date, String time, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listOfTags) {
+    public OneTimeTasks(String taskName, String shortDescription, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listTag) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
@@ -24,7 +28,7 @@ public class OneTimeTasks extends Task {
         this.time = String.valueOf(dateAndTime.getTime());
         this.levelOfImportance = levelOfImportance;
         this.completionStatus = completionStatus;
-        this.listOfTags = listOfTags;
+        this.listOfTags = tags.addTags(listTag);
     }
 
     public OneTimeTasks() {
@@ -32,23 +36,23 @@ public class OneTimeTasks extends Task {
     }
 
 
-    @Override
-    public void addingTags(String tag) { // this code has to also add the entered tag into a backup file
-        if (tag == null || tag.isEmpty()) {
-            System.out.println("Invalid tag. Please provide a non-empty tag.");
-            return;
-        }
-        if (listOfTags.contains(tag)) {
-            System.out.println("The tag already exists.");
-        } else {
-            listOfTags.add(tag);
-            System.out.println("Tag added successfully!");
-        }
-    }
+
+//    public void addingTags(String tag) {
+//        if (tag == null || tag.isEmpty()) {
+//            System.out.println("Invalid tag. Please provide a non-empty tag.");
+//            return;
+//        }
+//        if (listOfTags.contains(tag)) {
+//            System.out.println("The tag already exists.");
+//        } else {
+//            listOfTags.add(tag);
+//            System.out.println("Tag added successfully!");
+//        }
+//    }
 
     @Override
-    public String setDate(String date, String pattern) {
-        if (dateAndTime.dateExists(date, pattern)) {
+    public String setDate(String date) {
+        if (dateAndTime.dateExists(date)) {
             if (dateAndTime.dateValidToday(date)) {
                 this.date = date;
                 return "Date set successfully.";
@@ -62,10 +66,22 @@ public class OneTimeTasks extends Task {
 
     @Override
     void setTime(String start, String end) {
+        try {
+            LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm:ss"));
+            LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm:ss"));
 
+            if (startTime.isBefore(endTime)) {
+                String timeRange = start + " - " + end;
+                System.out.println("Valid time range: " + timeRange);
+            } else {
+                System.out.println("Invalid time range: Start time must be before end time.");
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid time format. Please use HH:mm:ss format.");
+        }
     }
 
-    @Override
+
     public void removingTag(String tag) { // this code has to also remove the entered tag into a backup file
         if (listOfTags.isEmpty()) {
             System.out.println("There are no tags to be removed.");
@@ -86,6 +102,21 @@ public class OneTimeTasks extends Task {
         } else {
             System.out.println("The tag could not be removed as it does not exist.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "OneTimeTasks{" +
+                "taskId='" + taskId + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", dateAndTime=" + dateAndTime +
+                ", levelOfImportance=" + levelOfImportance +
+                ", completionStatus=" + completionStatus +
+                ", listOfTags=" + listOfTags +
+                '}';
     }
 
     public String getTaskName() {

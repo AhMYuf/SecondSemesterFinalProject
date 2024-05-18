@@ -11,13 +11,10 @@ abstract class Task {
     protected CompletionStatus completionStatus;
     protected ArrayList<String> listOfTags;
 
-    abstract void removingTag(String tag);
-
-    abstract void addingTags(String tag);
-
-    abstract String setDate(String date, String pattern);
+    abstract String setDate(String date);
 
     abstract void setTime(String start, String end);
 
 
 }
+//TODO add a queue class to add tasks that you want to finish in succession

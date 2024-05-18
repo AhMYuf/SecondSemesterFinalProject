@@ -2,24 +2,25 @@ package org.example.files.classes;
 
 import org.example.files.classes.tasks.OneTimeTasks;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
-public class TaskManager implements Comparator<OneTimeTasks> {
+public class TaskManager implements Comparator<Type>, Serializable {
     private ArrayList<OneTimeTasks> oneTimeTasks;
     private FileInputStream fInput;
     private FileOutputStream fOut;
+    public String nameOfFolder;
 
-    private String nameOfFolder;
+    public TaskManager(String nameOfFolder) {
+        this.nameOfFolder = nameOfFolder;
+        createFolder();
+    }
 
-
-    public void creatFolder(String name) {
-        this.nameOfFolder = name;
-        File folder = new File(name);
+    private void createFolder() {
+        File folder = new File(nameOfFolder);
         if (!folder.exists()) {
             if (folder.mkdir()) {
                 System.out.println("Folder created successfully");
@@ -29,8 +30,8 @@ public class TaskManager implements Comparator<OneTimeTasks> {
         }
     }
 
-    public void createFile(String name) {
-        String fileName = String.format("%s/%s.txt", nameOfFolder, name);
+    public void createFile(String file) {
+        String fileName = String.format("%s/%s.txt", nameOfFolder, file);
         try {
             File file1 = new File(fileName);
             if (file1.createNewFile()) {
@@ -44,32 +45,58 @@ public class TaskManager implements Comparator<OneTimeTasks> {
         }
     }
 
-    public void addTask() {
-
+    public void addTaskToFile(OneTimeTasks task, String fileName) {
+        List<OneTimeTasks> tasks = getAllTasks(fileName);
+        tasks.add(task);
+        saveTasks(tasks, fileName);
     }
 
-    public void removeTask() {
-
+    // Method to remove a task from the file
+    public void removeTaskToFile(OneTimeTasks taskToRemove, String fileName) {
+        List<OneTimeTasks> tasks = getAllTasks(fileName);
+        tasks.removeIf(task -> task.equals(taskToRemove));
+        saveTasks(tasks, fileName);
     }
 
-    public void completedTask() {
 
+    // Method to display all tasks
+    public void displayingTasks(String FILE_NAME) {
+        List<OneTimeTasks> tasks = getAllTasks(FILE_NAME);
+        for (OneTimeTasks task : tasks) {
+            System.out.println(task);
+        }
     }
 
-    public void displayingTasks() {
-
+    // Helper method to load tasks from file
+    private List<OneTimeTasks> getAllTasks(String fileName) {
+        List<OneTimeTasks> tasks = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nameOfFolder + "/" + fileName))) {
+            tasks = (List<OneTimeTasks>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return tasks;
     }
 
-    public void savingTaskToFile() {
-
-    }
-
-    public void removingTaskToFile() {
-
+    // Helper method to save tasks to file
+    private void saveTasks(List<OneTimeTasks> tasks, String fileName) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nameOfFolder + "/" + fileName))) {
+            oos. writeObject(tasks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public int compare(OneTimeTasks o1, OneTimeTasks o2) {
+    public int compare(Type o1, Type o2) {
         return 0;
+    }
+
+    public String getNameOfFolder() {
+        return nameOfFolder;
+    }
+
+    public void setNameOfFolder(String nameOfFolder) {
+        this.nameOfFolder = nameOfFolder;
     }
 }

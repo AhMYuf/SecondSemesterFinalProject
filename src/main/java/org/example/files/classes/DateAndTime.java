@@ -4,32 +4,29 @@ package org.example.files.classes;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 /**
  * This class deals with everything relative to time & date.
  */
-public class DateAndTime implements Comparator<DateAndTime> {
+public class DateAndTime implements Comparable<DateAndTime> {
 
     String zoneIdString = "America/New_York";
-
-    public static void main(String[] args) {
-        DateAndTime dateAndTime = new DateAndTime();
-        System.out.println(dateAndTime.getTime());
-    }
+    String patternDay = "dd-MM-yyyy";
+    String patternHour = "HH:mm:ss";
 
     /**
      * This method gets the current date of an individual depending on their time zone
      *
      * @return String date
      */
-    public LocalDate getDate() {
+    public String getDate() {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
-        return now.toLocalDate();
+        return String.valueOf(now.toLocalDate());
     }
 
     /**
@@ -37,26 +34,25 @@ public class DateAndTime implements Comparator<DateAndTime> {
      *
      * @return String time
      */
-    public LocalTime getTime() {
+    public String getTime() {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
-        return now.toLocalTime().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+        return String.valueOf(now.toLocalTime().truncatedTo(ChronoUnit.SECONDS));
     }
 
     /**
      * This method checks whether a date actually exists or not
      *
      * @param dateString    inputted date
-     * @param pattern the inputted format pattern
      * @return boolean
      */
-    public boolean dateExists(String dateString, String pattern) {
+    public boolean dateExists(String dateString) {
         SimpleDateFormat sdf;
         try {
-            sdf = new SimpleDateFormat(pattern);
+            sdf = new SimpleDateFormat(patternDay);
             sdf.setLenient(false);
         } catch (IllegalArgumentException e) {
-            System.err.println("Invalid date pattern: " + pattern);
+            System.err.println("Invalid date pattern: ");
             return false;
         }
         try {
@@ -71,8 +67,30 @@ public class DateAndTime implements Comparator<DateAndTime> {
         return zoneIdString;
     }
 
-    public void setZoneIdString(String zoneIdString) {
-        this.zoneIdString = zoneIdString;
+    public void setZoneIdString(String Continent, String City, int option) {
+        int slash = zoneIdString.indexOf('/');
+        if (option == 1)
+            zoneIdString = Continent + "/" + City;
+        else if (option == 2)
+            zoneIdString = Continent + zoneIdString.substring(slash);
+        else
+            zoneIdString = zoneIdString.substring(0,slash) +"/"+ City;
+    }
+
+    public String getPatternDay() {
+        return patternDay;
+    }
+
+    public void setPatternDay(String patternDay) {
+        this.patternDay = patternDay;
+    }
+
+    public String getPatternHour() {
+        return patternHour;
+    }
+
+    public void setPatternHour(String patternHour) {
+        this.patternHour = patternHour;
     }
 
     /**
@@ -85,17 +103,24 @@ public class DateAndTime implements Comparator<DateAndTime> {
         return getDate().equals(dateString);
     }
 
-    /*
-    compares the todays date format and the entered date format of the entered date
-    then I jhave to create a method that will essentially change it to maake it the same
+    @Override
+    public int compareTo(DateAndTime o) {
+        LocalDate day = LocalDate.now();
+        ZoneId zoneId = ZoneId.of(this.zoneIdString);
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+        long difference = ChronoUnit.HOURS.between(day, now);
+        return (int) difference;
+    }
+}
+
+class DateComparator implements Comparator<DateAndTime> {
+    /**
+     * compares the today's date format and the entered date format of the entered date
+     * then I have to create a method that will essentially change it to make it the same
      */
     @Override
     public int compare(DateAndTime o1, DateAndTime o2) {
-        //o1.getDate()
-
-
-
-        return 0;
+        return o1.getDate().compareTo(o2.getDate());
     }
 
 }
