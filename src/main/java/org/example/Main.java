@@ -16,6 +16,7 @@ public class Main {
         int choice = scanner.nextInt();
         if (choice == 1) {
             userInterface.gettingUserData();
+            userInterface.loop();
         } else {
             userInterface.loop();
         }

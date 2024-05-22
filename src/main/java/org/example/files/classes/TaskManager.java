@@ -5,11 +5,15 @@ import org.example.files.classes.tasks.OneTimeTasks;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class manages tasks by providing methods to create folders, files, add tasks to files, and remove tasks from files.
  */
 public class TaskManager {
+
+    private static final Logger logger = Logger.getLogger(TaskManager.class.getName());
 
     /**
      * Creates a folder at the specified path with the given folder name.
@@ -23,8 +27,7 @@ public class TaskManager {
         File folder = new File(folderPath);
 
         try {
-            boolean success = folder.mkdir();
-            return success;
+            return folder.mkdir();
         } catch (SecurityException e) {
             System.err.println("SecurityException: " + e.getMessage());
             return false;
@@ -51,7 +54,6 @@ public class TaskManager {
             }
         } catch (IOException e) {
             System.out.println("An error occurred while creating files");
-            e.printStackTrace();
         }
     }
 
@@ -93,7 +95,7 @@ public class TaskManager {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path + "/" + fileName))) {
             tasks = (List<OneTimeTasks>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error occurred while reading tasks from file: " + path + "/" + fileName, e);
         }
         return tasks;
     }
@@ -109,7 +111,7 @@ public class TaskManager {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path + "/" + fileName))) {
             oos.writeObject(tasks);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error occurred while saving tasks to file: " + path + "/" + fileName, e);
         }
     }
 }

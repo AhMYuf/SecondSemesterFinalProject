@@ -1,6 +1,7 @@
 package org.example.files.classes;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * This class is responsible for writing user information to a file.
@@ -18,8 +19,8 @@ public class UserDataSaving {
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
             byte[] bytes = convertToBytes(input);
             fileOutputStream.write(bytes);
-        } catch (Exception e) {
-            e.getMessage();
+        } catch (IOException e) {
+            System.err.println("An error occurred while writing user information: " + e.getMessage());
         }
     }
 
