@@ -14,11 +14,11 @@ public class UserInterface {
     TaskManager taskManager;
     MessageSender messageSender;
     UserDataSaving userDataSaving;
-    ArrayList<OneTimeTasks> createdTasks;
 
 
     /**
-     * This method allow OneTimeTasks objects to be classed according to their EndDate
+     * This method allow OneTimeTasks objects to be classed according to their EndDate.
+     * Time complexity O(n^2).
      *
      * @param createdTasks stores all the created tasks.
      */
@@ -40,6 +40,7 @@ public class UserInterface {
 
     /**
      * This method sort based on the level of importance of the object.
+     * Time complexity O(n^2).
      *
      * @param createdTasks contains all the OneTimeTasks objects
      */
@@ -71,6 +72,7 @@ public class UserInterface {
 
     /**
      * Performs a binary search to find a task by its name in a sorted list of tasks.
+     * Time complexity O(log n).
      *
      * @param createdTasks The list of tasks to search in.
      * @param targetName   The name of the task to search for.
@@ -132,12 +134,18 @@ public class UserInterface {
         strTemp = scanner.nextLine() + "@gmail.com";
         messageSender.setEmail_To(strTemp);
         userDataSaving.writeUserInfo("User gmail: " + strTemp, foldPath);
+        scanner.close();
     }
 
     /**
      * This method allows for the user to interact with the program.
      */
     public void loop()  {
+        Scanner scanner = new Scanner(System.in);
+        DateAndTime dateAndTime = new DateAndTime();
+        ArrayList<OneTimeTasks> createdTasks = new ArrayList<>();
+
+
         String userInput = "";
         String date;
         String time;
@@ -152,7 +160,7 @@ public class UserInterface {
         int index;
 
         while (!userInput.equals("STOP")) {
-            Scanner scanner = new Scanner(System.in);
+            System.out.println();
             System.out.println("Please enter the number of action you wish to perform: ");
             System.out.println(
                     """
@@ -200,14 +208,13 @@ public class UserInterface {
                             42. Change the completion status of a task."""
             );
             userInput = scanner.nextLine().toUpperCase();
-            DateAndTime dateAndTime = new DateAndTime("America/New_York", "dd-MM-yyyy", "HH:mm:ss");
             switch (userInput) {
                 case "1":
                     date = dateAndTime.getDate(dateAndTime.getZoneIdString());
                     System.out.println("Today is: " + date);
                     break;
                 case "2":
-                    time = dateAndTime.getTime(dateAndTime.getPatternHour());
+                    time = dateAndTime.getTime();
                     System.out.println("The current time is: " + time);
                     break;
                 case "3":
@@ -316,7 +323,6 @@ public class UserInterface {
                     for (int i = 0; i < LevelOfImportance.values().length; i++) {
                         System.out.println((i + 1) + ". " + LevelOfImportance.values()[i]);
                     }
-                    scanner.nextLine();
 
                     System.out.print("Enter your choice: ");
                     num = scanner.nextInt();
@@ -626,8 +632,8 @@ public class UserInterface {
                     System.out.println("Unknown command: " + userInput);
                     break;
             }
-            scanner.close();
         }
+        scanner.close();
     }
 }
 

@@ -17,23 +17,21 @@ public class DateAndTime {
     /**
      * The time zone ID string.
      */
-    private String zoneIdString = "America/New_York";
+    private String zoneIdString;
 
     /**
      * The pattern for day formatting.
      */
-    private String patternDay = "dd-MM-yyyy";
+    private String patternDay;
 
     /**
      * The pattern for hour formatting.
      */
-    private String patternHour = "HH:mm:ss";
+    private String patternHour;
 
     /**
      * Constructs a DateAndTime object with default settings.
      */
-    public DateAndTime() {
-    }
 
 
     /**
@@ -47,6 +45,15 @@ public class DateAndTime {
         this.zoneIdString = zoneIdString;
         this.patternDay = patternDay;
         this.patternHour = patternHour;
+    }
+
+    /**
+     * No parameter constructor
+     */
+    public DateAndTime() {
+        this.zoneIdString = "America/New_York";
+        this.patternDay = "dd-MM-yyyy";
+        this.patternHour = "HH:mm:ss";
     }
 
     /**
@@ -86,13 +93,12 @@ public class DateAndTime {
     /**
      * Gets the current time based on the time zone.
      *
-     * @param patternHour The pattern for hour formatting.
      * @return The current time.
      */
-    public String getTime(String patternHour) {
+    public String getTime() {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternHour);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(getPatternHour());
         return now.format(formatter);
     }
 
@@ -175,10 +181,14 @@ public class DateAndTime {
 
         ZonedDateTime inputDateTime = ZonedDateTime.of(date, time, zoneId);
 
-        long daysDifference = ChronoUnit.DAYS.between(inputDateTime, now);
-        long hoursDifference = ChronoUnit.HOURS.between(inputDateTime, now) % 24;
+        long minutesDifference = ChronoUnit.MINUTES.between(now, inputDateTime);
+        long absMinutesDifference = Math.abs(minutesDifference);
 
-        return "The difference of days: " + daysDifference + ". The difference of hours: " + hoursDifference + ".";
+        long totalHours = absMinutesDifference / 60;
+        long remainingMinutes = absMinutesDifference % 60;
+
+        return "The difference in days: " + ChronoUnit.DAYS.between(now.toLocalDate(), date) + ".In terms of time it is, hours: " + totalHours + ", and minutes: " + remainingMinutes;
+
     }
 
     /**
