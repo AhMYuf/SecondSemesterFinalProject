@@ -13,6 +13,14 @@ public class UserInterface {
 
     ArrayList<OneTimeTasks> createdTasks;
 
+    public void gettingUserData() {
+        System.out.println("Please enter your time zone");
+
+
+
+    }
+
+
     public void loop() {
         Scanner scanner = new Scanner(System.in);
         String userInput = "";
@@ -111,8 +119,11 @@ public class UserInterface {
                     System.out.println("Task name: ");
                     String description = scanner.nextLine();
 
-                    System.out.println("Task name: ");
+                    System.out.println("EndTime: ");
                     String endTime = scanner.nextLine();
+
+                    System.out.println("End Date: ");
+                    String endDate = scanner.nextLine();
 
                     System.out.println("Enter the number corresponding to the level of importance:");
                     for (int i = 0; i < LevelOfImportance.values().length; i++) {
@@ -144,9 +155,9 @@ public class UserInterface {
                         temp.add(tag);
                     }
 
-                    createdTasks.add(new OneTimeTasks(taskName, description, endTime, levelOfImp, CompStat, temp));
+                    createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp));
 
-                case 15:
+                case "15":
                     System.out.print("Enter tag to add: ");
                     String tagToAdd = scanner.nextLine();
 
@@ -161,7 +172,7 @@ public class UserInterface {
                         }
                     }
                     break;
-                case 16:
+                case "16":
                     System.out.print("Enter tag to remove: ");
                     String tagToRemove = scanner.nextLine();
 
@@ -176,12 +187,12 @@ public class UserInterface {
                         }
                     }
                     break;
-                case 17:
+                case "17":
                     ArrayList<String> display = new ArrayList<>();
                     for (OneTimeTasks item : createdTasks) {
                         display.add(String.valueOf(item.getListOfTags()));
                     }
-                case 18:
+                case "18":
                     System.out.print("Enter tag to check: ");
                     String tagToCheck = scanner.nextLine().toUpperCase();
 
@@ -196,7 +207,7 @@ public class UserInterface {
 //                        }
                     }
                     break;
-                case 19:
+                case "19":
                     System.out.print("Enter date to set: ");
                     String dateToSet = scanner.nextLine();
 
@@ -211,7 +222,7 @@ public class UserInterface {
                         }
                     }
                     break;
-                case 20:
+                case "20":
                     System.out.print("Enter start time (HH:mm:ss): ");
                     String startTime = scanner.nextLine();
                     System.out.print("Enter end time (HH:mm:ss): ");
@@ -219,21 +230,21 @@ public class UserInterface {
                     dateAndTime.setTime(startTime, endTime);
                     break;
 
-                case 22:
+                case "22":
                     System.out.println("Next ID: " + OneTimeTasks.getNextId());
                     // TODO this will be saved
                     break;
-                case 24:
+                case "24":
                     System.out.println("Please enter the index of element you wish to get the ID: ");
                     num = scanner.nextInt();
                     System.out.println("Task ID: " + createdTasks.get(num).getTaskId());
                     break;
-                case 26:
+                case "26":
                     System.out.println("Please enter the index of element you wish to get the ID: ");
                     num = scanner.nextInt();
                     System.out.println("Task Name: " + createdTasks.get(num).getTaskName());
                     break;
-                case 27:
+                case "27":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
 
@@ -242,12 +253,12 @@ public class UserInterface {
                     createdTasks.get(num).setTaskName(taskName);
                     System.out.println("Task Name: " + taskName);
                     break;
-                case 28:
+                case "28":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
                     System.out.println("Short Description: " + createdTasks.get(num).getShortDescription());
                     break;
-                case 29:
+                case "29":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
 
@@ -257,46 +268,58 @@ public class UserInterface {
                     System.out.println("Short Description entered.");
                     break;
 
-                case 30:
+                case "30":
                     System.out.println("Enter the index of the task you wish to get the starting time: ");
                     num = scanner.nextInt();
                     System.out.println("Start Time: " + createdTasks.get(num).getStartTime());
                     break;
-                case 31:
+                case "31":
                     System.out.println("Enter the index of the task you wish to set the starting time: ");
                     num = scanner.nextInt();
+                    System.out.println("Enter new starting time: ");
+                    startTime = scanner.nextLine();
+                    createdTasks.get(num).setStartTime(startTime);
+                    break;
+                case "32":
+                    System.out.println("Enter the index of the task you wish to get the starting date: ");
+                    num = scanner.nextInt();
 
+                    System.out.println("Start Time: " + createdTasks.get(num).getStartDate());
+                    break;
+                case "33":
+                    System.out.println("Enter the index of the task you wish to get the starting time: ");
+                    num = scanner.nextInt();
 
-                    System.out.println("Start Time: " + createdTasks.get(num).setStartTime());
+                    System.out.println("Enter new starting date: ");
+                    startTime = scanner.nextLine();
+                    createdTasks.get(num).setStartDate(startTime);
                     break;
-                case 32:
-                    System.out.print("Enter new start time: ");
-                    String newStartTime = scanner.nextLine();
-                    oneTimeTasks.setStartTime(newStartTime);
+                case "35":
+                    System.out.println("Enter the index of the task you wish to get the end time: ");
+                    num = scanner.nextInt();
+
+                    System.out.println("End Time: " + createdTasks.get(num).getEndTime());
                     break;
-                case 33:
-                    System.out.println("DateAndTime: " + oneTimeTasks.getDateAndTime());
+                case "36":
+                    System.out.println("Enter the index of the task you wish to set the end time: ");
+                    num = scanner.nextInt();
+
+                    System.out.println("Enter new end time: ");
+                    endTime = scanner.nextLine();
+                    createdTasks.get(num).setEndTime(endTime);
                     break;
-                case 34:
-                    // Assuming you have a method to input a DateAndTime object
-                    // DateAndTime newDateAndTime = inputDateAndTime(scanner);
-                    // oneTimeTasks.setDateAndTime(newDateAndTime);
+                case "37":
+                    System.out.println("Enter the index of the task you wish to get the end date: ");
+                    num = scanner.nextInt();
+                    System.out.println("End Time: " + createdTasks.get(num).getEndDate());
                     break;
-                case 35:
-                    System.out.println("List of Tags: " + oneTimeTasks.getListOfTags());
-                    break;
-                case 36:
-                    // Assuming you have a method to input a list of tags
-                    // ArrayList<String> newTags = inputTags(scanner);
-                    // oneTimeTasks.setListOfTags(newTags);
-                    break;
-                case 37:
-                    System.out.println("End Time: " + oneTimeTasks.getEndTime());
-                    break;
-                case 38:
-                    System.out.print("Enter new end time: ");
-                    String newEndTime = scanner.nextLine();
-                    oneTimeTasks.setEndTime(newEndTime);
+                case "38":
+                    System.out.println("Enter the index of the task you wish to set the end date: ");
+                    num = scanner.nextInt();
+
+                    System.out.println("Enter new end date: ");
+                    endDate = scanner.nextLine();
+                    createdTasks.get(num).setEndDate(endDate);
                     break;
                 default:
                     System.out.println("Unknown command: " + userInput);

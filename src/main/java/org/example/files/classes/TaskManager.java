@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskManager {
-    private ArrayList<OneTimeTasks> oneTimeTasks;
-    private FileInputStream fInput;
-    private FileOutputStream fOut;
     public String nameOfFolder;
 
     public TaskManager(String nameOfFolder) {

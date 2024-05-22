@@ -1,74 +1,96 @@
 package org.example.files.classes;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.*;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MessageSender {
 
-    private static String email = "ahmetyusufyildirimm@gmail.com";
-    public static void sendDelayedEmail(String to, String from, String host, String subject, String text, Date endTime) {
+    private static final String EMAIL_FROM = "holyboom4@gmail.com";
+    private static final String APP_PASSWORD = "mrrh uijr ijox zupc";
+
+    /**
+     * No instance can be made from this class
+     */
+    private MessageSender() {}
+
+    /**
+     * Send email to a recipient at a later time
+     * @param recipient the one receiving the email
+     * @param message the message or content of the email
+     * @param subject the subject of the email
+     * @param endDate the date when the email should be sent (format: "yyyy-MM-dd")
+     * @param endTime the time when the email should be sent (format: "HH:mm:ss")
+     */
+    public static void sendEmailAt(String recipient, String message, String subject, String endDate, String endTime) throws MessagingException {
+        String dateTime = endDate + " " + endTime;
+        LocalDateTime sendDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Date date = Date.from(sendDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
         Timer timer = new Timer();
-
-
-        long delay =  endTime.getTime() - System.currentTimeMillis();
-
-        // Schedule the email sending task after the delay
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    // Get system properties
-                    Properties properties = System.getProperties();
-
-                    // Setup mail server
-                    properties.setProperty("mail.smtp.host", host);
-
-                    // Get the default Session object.
-                    Session session = Session.getDefaultInstance(properties);
-
-                    // Create a default MimeMessage object.
-                    MimeMessage message = new MimeMessage(session);
-
-                    // Set From: header field of the header.
-                    message.setFrom(new InternetAddress(from));
-
-                    // Set To: header field of the header.
-                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-                    // Set Subject: header field
-                    message.setSubject(subject);
-
-                    // Set the actual message
-                    message.setText(text);
-
-                    // Send message
-                    Transport.send(message);
-                    System.out.println("Email sent successfully at " + endTime);
-                } catch (MessagingException mex) {
-                    mex.printStackTrace();
+                    MimeMessage mimeMessage = new MimeMessage(getEmailSession());
+                    mimeMessage.setFrom(new InternetAddress(EMAIL_FROM));
+                    mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+                    mimeMessage.setSubject(subject);
+                    mimeMessage.setText(message);
+                    Transport.send(mimeMessage);
+                    System.out.println("Email sent successfully at " + dateTime);
+                } catch (MessagingException e) {
+                    System.out.println(e.getMessage());
                 }
             }
-        }, delay);
+        }, date);
+    }
+
+    /**
+     * Get the email properties, for better structure
+     * @return the email properties
+     */
+    private static Properties getGmailProperties() {
+        Properties prop = new Properties();
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        return prop;
+    }
+
+    /**
+     * Get the email session
+     * @return the email session
+     */
+    private static Session getEmailSession() {
+        return Session.getInstance(getGmailProperties(), new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_FROM, APP_PASSWORD);
+            }
+        });
     }
 
     public static void main(String[] args) {
-        // Example usage
-        String to = email;
-        String from = email;
-        String host = "smtp.example.com";
-        String subject = "Delayed Email";
-        String text = "This is a delayed email sent at " + new Date();
-
-        // Set the end time when you want the email to be sent (e.g., 4 hours later)
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 1);
-        Date endTime = calendar.getTime();
-
-        sendDelayedEmail(to, from, host, subject, text, endTime);
+        try {
+            // Schedule email to be sent at a specific date and time
+            sendEmailAt("recipient@example.com", "This is a scheduled email.", "Scheduled Email", "2024-05-21", "18:00:00");
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -10,7 +10,9 @@ public class OneTimeTasks extends Task {
     private String taskId;
     private String taskName;
     private String shortDescription;
-    private String date;
+    private String startDate;
+
+    private String endDate;
     private String startTime;
     private String endTime;
     private String levelOfImportance;
@@ -18,11 +20,12 @@ public class OneTimeTasks extends Task {
     protected ArrayList<String> listOfTags;
     public DateAndTime dateAndTime;
 
-    public OneTimeTasks(String taskName, String shortDescription, String endTime, String levelOfImportance, String completionStatus, ArrayList<String> listTag) {
+    public OneTimeTasks(String taskName, String shortDescription, String endTime, String endDate, String levelOfImportance, String completionStatus, ArrayList<String> listTag) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
-        this.date = String.valueOf(dateAndTime.getDate(dateAndTime.getPatternDay()));
+        this.startDate = String.valueOf(dateAndTime.getDate(dateAndTime.getPatternDay()));
+        this.endDate = endDate;
         this.startTime = String.valueOf(dateAndTime.getTime(dateAndTime.getPatternHour()));
         this.endTime = endTime;
         this.levelOfImportance = levelOfImportance;
@@ -63,7 +66,7 @@ public class OneTimeTasks extends Task {
     public String setDate(String date) {
         if (dateAndTime.dateExists(date)) {
             if (dateAndTime.dateValidToday(date)) {
-                this.date = date;
+                this.startDate = date;
                 return "Date set successfully.";
             } else {
                 return "The date has already passed.";
@@ -81,7 +84,7 @@ public class OneTimeTasks extends Task {
                 "taskId='" + taskId + '\'' +
                 ", taskName='" + taskName + '\'' +
                 ", shortDescription='" + shortDescription + '\'' +
-                ", date='" + date + '\'' +
+                ", date='" + startDate + '\'' +
                 ", time='" + startTime + '\'' +
                 ", dateAndTime=" + dateAndTime +
                 ", levelOfImportance=" + levelOfImportance +
@@ -113,8 +116,12 @@ public class OneTimeTasks extends Task {
         this.shortDescription = shortDescription;
     }
 
-    public String getDate() {
-        return date;
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public String getStartTime() {
@@ -129,9 +136,6 @@ public class OneTimeTasks extends Task {
         return dateAndTime;
     }
 
-    public void setDateAndTime(DateAndTime dateAndTime) {
-        this.dateAndTime = dateAndTime;
-    }
 
     public ArrayList<String> getListOfTags() {
         return listOfTags;
@@ -143,6 +147,14 @@ public class OneTimeTasks extends Task {
 
     public String getEndTime() {
         return endTime;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public void setEndTime(String endTime) {
