@@ -9,7 +9,7 @@ public class UserDataSaving {
 
     public String nameFolder = taskManager.getNameOfFolder() + "/userData.txt";
 
-    public void writeUserInfo(Object input) throws FileNotFoundException {
+    public void writeUserInfo(String input) throws FileNotFoundException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(nameFolder)) {
             byte[] bytes = convertToBytes(input);
             fileOutputStream.write(bytes);
@@ -28,13 +28,5 @@ public class UserDataSaving {
         } else {
             throw new IllegalArgumentException("Unsupported input type: " + input.getClass());
         }
-    }
-
-    public String getNameFolder() {
-        return nameFolder;
-    }
-
-    public void setNameFolder(String nameFolder) {
-        this.nameFolder = nameFolder;
     }
 }

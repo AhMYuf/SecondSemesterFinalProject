@@ -1,14 +1,9 @@
 package org.example.files.classes.tasks;
-import org.example.files.classes.DateAndTime;
-import org.example.files.classes.reference.CompletionStatus;
-import org.example.files.classes.reference.LevelOfImportance;
-import org.example.files.classes.reference.Tags;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import org.example.files.classes.DateAndTime;
+
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 public class OneTimeTasks extends Task {
     private static int nextId = 1;
@@ -16,39 +11,53 @@ public class OneTimeTasks extends Task {
     private String taskName;
     private String shortDescription;
     private String date;
-    private String time;
-    public Tags tags;
+    private String startTime;
+    private String endTime;
+    private String levelOfImportance;
+    private String completionStatus;
+    protected ArrayList<String> listOfTags;
     public DateAndTime dateAndTime;
 
-    public OneTimeTasks(String taskName, String shortDescription, LevelOfImportance levelOfImportance, CompletionStatus completionStatus, ArrayList<String> listTag) {
+    public OneTimeTasks(String taskName, String shortDescription, String endTime, String levelOfImportance, String completionStatus, ArrayList<String> listTag) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
-        this.date = String.valueOf(dateAndTime.getDate());
-        this.time = String.valueOf(dateAndTime.getTime());
+        this.date = String.valueOf(dateAndTime.getDate(dateAndTime.getPatternDay()));
+        this.startTime = String.valueOf(dateAndTime.getTime(dateAndTime.getPatternHour()));
+        this.endTime = endTime;
         this.levelOfImportance = levelOfImportance;
         this.completionStatus = completionStatus;
-        this.listOfTags = tags.addTags(listTag);
-    }
-
-    public OneTimeTasks() {
-        //empty constructor
+        this.listOfTags = listTag;
     }
 
 
-
-//    public void addingTags(String tag) {
-//        if (tag == null || tag.isEmpty()) {
-//            System.out.println("Invalid tag. Please provide a non-empty tag.");
-//            return;
+//    public void addTags(String tag, OneTimeTasks oneTimeTasks) {
+//        ArrayList<String> temp = oneTimeTasks.getListOfTags();
+//
+//        if (tag != null && !temp.contains(tag.toUpperCase())) {
+//            temp.add(tag.toUpperCase());
 //        }
-//        if (listOfTags.contains(tag)) {
-//            System.out.println("The tag already exists.");
-//        } else {
-//            listOfTags.add(tag);
-//            System.out.println("Tag added successfully!");
-//        }
+//        oneTimeTasks.setListOfTags(temp);
 //    }
+//
+//    public void removeTags(String tag, OneTimeTasks oneTimeTasks) {
+//        ArrayList<String> temp = oneTimeTasks.getListOfTags();
+//
+//        if (temp != null && tag != null && temp.contains(tag.toUpperCase())) {
+//            temp.remove(tag.toUpperCase());
+//        }
+//        oneTimeTasks.setListOfTags(temp);
+//    }
+
+    public boolean tagExists(String tag) {
+        List<String> temp = listOfTags;
+        if (temp != null && tag != null) {
+            return temp.contains(tag.toUpperCase());
+        }
+        return false;
+    }
+
+
 
     @Override
     public String setDate(String date) {
@@ -64,45 +73,7 @@ public class OneTimeTasks extends Task {
         }
     }
 
-    @Override
-    void setTime(String start, String end) {
-        try {
-            LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm:ss"));
-            LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-            if (startTime.isBefore(endTime)) {
-                String timeRange = start + " - " + end;
-                System.out.println("Valid time range: " + timeRange);
-            } else {
-                System.out.println("Invalid time range: Start time must be before end time.");
-            }
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid time format. Please use HH:mm:ss format.");
-        }
-    }
-
-
-    public void removingTag(String tag) { // this code has to also remove the entered tag into a backup file
-        if (listOfTags.isEmpty()) {
-            System.out.println("There are no tags to be removed.");
-            return;
-        }
-
-        boolean removed = false;
-        Iterator<String> iterator = listOfTags.iterator();
-        while (iterator.hasNext()) {
-            String currentTag = iterator.next();
-            if (tag.equalsIgnoreCase(currentTag)) {
-                iterator.remove();
-                removed = true;
-            }
-        }
-        if (removed) {
-            System.out.println("Tag removed successfully!");
-        } else {
-            System.out.println("The tag could not be removed as it does not exist.");
-        }
-    }
 
     @Override
     public String toString() {
@@ -111,12 +82,19 @@ public class OneTimeTasks extends Task {
                 ", taskName='" + taskName + '\'' +
                 ", shortDescription='" + shortDescription + '\'' +
                 ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
+                ", time='" + startTime + '\'' +
                 ", dateAndTime=" + dateAndTime +
                 ", levelOfImportance=" + levelOfImportance +
                 ", completionStatus=" + completionStatus +
                 ", listOfTags=" + listOfTags +
                 '}';
+    }
+
+    public static int getNextId() {
+        return nextId;
+    }
+    public String getTaskId() {
+        return taskId;
     }
 
     public String getTaskName() {
@@ -135,20 +113,24 @@ public class OneTimeTasks extends Task {
         this.shortDescription = shortDescription;
     }
 
-    public LevelOfImportance getLevelOfImportance() {
-        return levelOfImportance;
+    public String getDate() {
+        return date;
     }
 
-    public void setLevelOfImportance(LevelOfImportance levelOfImportance) {
-        this.levelOfImportance = levelOfImportance;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public CompletionStatus getCompletionStatus() {
-        return completionStatus;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public void setCompletionStatus(CompletionStatus completionStatus) {
-        this.completionStatus = completionStatus;
+    public DateAndTime getDateAndTime() {
+        return dateAndTime;
+    }
+
+    public void setDateAndTime(DateAndTime dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public ArrayList<String> getListOfTags() {
@@ -159,5 +141,11 @@ public class OneTimeTasks extends Task {
         this.listOfTags = listOfTags;
     }
 
+    public String getEndTime() {
+        return endTime;
+    }
 
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

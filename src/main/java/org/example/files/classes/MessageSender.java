@@ -1,51 +1,74 @@
 package org.example.files.classes;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.*;
 
 public class MessageSender {
 
-    // Find your Account Sid and Token at console.twilio.com
-    public static final String ACCOUNT_SID = "AC84a3516aa5da5c8a1f82e7f921335eb3";
-    public static final String AUTH_TOKEN = "9af55d6df091484453ec2df1f6fb371f";
-    public static String phoneNumber = "+15146911882";
+    private static String email = "ahmetyusufyildirimm@gmail.com";
+    public static void sendDelayedEmail(String to, String from, String host, String subject, String text, Date endTime) {
+        Timer timer = new Timer();
 
-    public class Example {
-        // Find your Account SID and Auth Token at twilio.com/console
-        // and set the environment variables. See http://twil.io/secure
-        public static void main(String[] args) {
-            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-            Message message = Message.creator(
-                            new com.twilio.type.PhoneNumber(phoneNumber),
-                            new com.twilio.type.PhoneNumber(phoneNumber),
-                            "It's me Ahmet")
-                    .create();
 
-            System.out.println(message.getSid());
-        }
+        long delay =  endTime.getTime() - System.currentTimeMillis();
+
+        // Schedule the email sending task after the delay
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    // Get system properties
+                    Properties properties = System.getProperties();
+
+                    // Setup mail server
+                    properties.setProperty("mail.smtp.host", host);
+
+                    // Get the default Session object.
+                    Session session = Session.getDefaultInstance(properties);
+
+                    // Create a default MimeMessage object.
+                    MimeMessage message = new MimeMessage(session);
+
+                    // Set From: header field of the header.
+                    message.setFrom(new InternetAddress(from));
+
+                    // Set To: header field of the header.
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                    // Set Subject: header field
+                    message.setSubject(subject);
+
+                    // Set the actual message
+                    message.setText(text);
+
+                    // Send message
+                    Transport.send(message);
+                    System.out.println("Email sent successfully at " + endTime);
+                } catch (MessagingException mex) {
+                    mex.printStackTrace();
+                }
+            }
+        }, delay);
     }
-    public void sendMessage() {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-        Message message = Message
-                .creator(
-                        new PhoneNumber(getPhoneNumber()),
-                        new PhoneNumber(getPhoneNumber()),
-                        "This is the ship that made the Kessel Run in fourteen parsecs?"
-                )
-                .create();
+    public static void main(String[] args) {
+        // Example usage
+        String to = email;
+        String from = email;
+        String host = "smtp.example.com";
+        String subject = "Delayed Email";
+        String text = "This is a delayed email sent at " + new Date();
 
-        System.out.println(message.getSid());
-    }
+        // Set the end time when you want the email to be sent (e.g., 4 hours later)
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 1);
+        Date endTime = calendar.getTime();
 
-
-    public static String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public static void setPhoneNumber(String phoneNumber) {
-        MessageSender.phoneNumber = phoneNumber;
+        sendDelayedEmail(to, from, host, subject, text, endTime);
     }
 }

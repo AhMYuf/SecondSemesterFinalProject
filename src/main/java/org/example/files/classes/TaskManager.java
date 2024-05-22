@@ -3,12 +3,10 @@ package org.example.files.classes;
 import org.example.files.classes.tasks.OneTimeTasks;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public class TaskManager implements Comparator<Type>, Serializable {
+public class TaskManager {
     private ArrayList<OneTimeTasks> oneTimeTasks;
     private FileInputStream fInput;
     private FileOutputStream fOut;
@@ -45,6 +43,7 @@ public class TaskManager implements Comparator<Type>, Serializable {
         }
     }
 
+    // TODO add the task to the createdTasks
     public void addTaskToFile(OneTimeTasks task, String fileName) {
         List<OneTimeTasks> tasks = getAllTasks(fileName);
         tasks.add(task);
@@ -85,11 +84,6 @@ public class TaskManager implements Comparator<Type>, Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public int compare(Type o1, Type o2) {
-        return 0;
     }
 
     public String getNameOfFolder() {
