@@ -5,6 +5,7 @@ import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 import org.example.files.classes.tasks.OneTimeTasks;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,19 +13,40 @@ import java.util.*;
 public class UserInterface {
     DateAndTime dateAndTime;
     TaskManager taskManager;
-
+    MessageSender messageSender;
+    UserDataSaving userDataSaving;
     ArrayList<OneTimeTasks> createdTasks;
 
     public void gettingUserData() {
         Scanner scanner = new Scanner(System.in);
-        DateAndTime dateAndTime = new DateAndTime();
+        System.out.println("Plase enter folder path: ");
+        String foldPath = scanner.nextLine(); // "/Users/ahmetyusufyildirim/Desktop";
 
+        System.out.println("Plase enter folder name: ");
+        String foldName = scanner.nextLine(); // "TaskPlanner";
+
+        TaskManager.createFolder(foldPath, foldName);
+
+        System.out.println("Please enter file name: ");
+        String filName = scanner.nextLine(); // "UserData";
+
+        TaskManager.createFile(foldPath + File.separator + foldName, filName);
+        foldPath = foldPath + File.separator + foldName  + File.separator +filName;
         String strTemp;
 
         System.out.println("Please enter your time zone: ");
         strTemp = scanner.nextLine();
-        dateAndTime.setZoneIdString(strTemp);
+        try {
+            dateAndTime.setZoneIdString(strTemp);
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input format. Please enter a valid format.");
+        }
+        userDataSaving.writeUserInfo("User time zone: " + strTemp, foldPath);
 
+        System.out.println("Please enter your email address (@gmail.com): ");
+        strTemp = scanner.nextLine() + "@gmail.com";
+        messageSender.setEmail_To(strTemp);
+        userDataSaving.writeUserInfo("User gmail: " + strTemp, foldPath);
     }
 
     public void loop()  {
@@ -40,7 +62,7 @@ public class UserInterface {
 
             switch (userInput) {
                 case "0":
-                    System.out.println("Please enter '1' for default settings, and '2' for personal preference: ");
+                    System.out.println("Please enter '1' for empty constructor, and '2' for personal input: ");
                     int num = scanner.nextInt();
                     if (num == 1) {
                         DateAndTime dateAndTime = new DateAndTime();
@@ -62,6 +84,7 @@ public class UserInterface {
                 case "2":
                     time = dateAndTime.getTime(dateAndTime.getPatternHour());
                     System.out.println("The current time is: " + time);
+                    break;
                 case "3":
                     System.out.println("Please enter the date in a valid formet (dd-MM-yyyy): ");
                     date = scanner.nextLine();
@@ -108,15 +131,28 @@ public class UserInterface {
                     dateAndTime.setPatternHour(time);
                     break;
                 case "12":
+                    System.out.println("Please enter the path of the folder: ");
+                    String path = scanner.nextLine();
                     System.out.println("Please enter the name of the folder: ");
                     name = scanner.nextLine();
-                    taskManager = new TaskManager(name);
+                    TaskManager.createFolder(path, name);
 
+                    boolean result = TaskManager.createFolder("/Users/ahmetyusufyildirim/Desktop", "UserLibrary");
+
+                    if (result) {
+                        System.out.println("Folder is created successfully");
+                    } else {
+                        System.out.println("Error Found! Unable to create folder.");
+                    }
                     break;
                 case "13":
+                    System.out.println("Please enter the path of the folder you wish to put the file in: ");
+                    path = scanner.nextLine();
                     System.out.println("Please enter the name of the file: ");
                     name = scanner.nextLine();
-                    taskManager.createFile(name);
+
+                    taskManager.createFile(path, name);
+                    break;
                 case "14":
                     MessageSender messageSender = new MessageSender();
                     System.out.println("Please enter the required information for your task: ");
@@ -175,7 +211,7 @@ public class UserInterface {
                     } catch (MessagingException e) {
                         System.out.println("Failed to send email: " + e.getMessage());
                     }
-
+                    break;
                 case "15":
                     System.out.print("Enter tag to add: ");
                     String tagToAdd = scanner.nextLine();
@@ -211,6 +247,7 @@ public class UserInterface {
                     for (OneTimeTasks item : createdTasks) {
                         display.add(String.valueOf(item.getListOfTags()));
                     }
+                    break;
                 case "18":
                     System.out.print("Enter tag to check: ");
                     String tagToCheck = scanner.nextLine().toUpperCase();
@@ -241,21 +278,20 @@ public class UserInterface {
                     endTime = scanner.nextLine();
                     dateAndTime.setTime(startTime, endTime);
                     break;
-
-                case "22":
+                case "21":
                     System.out.println("Next ID: " + OneTimeTasks.getNextId());
                     break;
-                case "24":
+                case "22":
                     System.out.println("Please enter the index of element you wish to get the ID: ");
                     num = scanner.nextInt();
                     System.out.println("Task ID: " + createdTasks.get(num).getTaskId());
                     break;
-                case "26":
+                case "23":
                     System.out.println("Please enter the index of element you wish to get the ID: ");
                     num = scanner.nextInt();
                     System.out.println("Task Name: " + createdTasks.get(num).getTaskName());
                     break;
-                case "27":
+                case "24":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
 
@@ -264,12 +300,12 @@ public class UserInterface {
                     createdTasks.get(num).setTaskName(taskName);
                     System.out.println("Task Name: " + taskName);
                     break;
-                case "28":
+                case "25":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
                     System.out.println("Short Description: " + createdTasks.get(num).getShortDescription());
                     break;
-                case "29":
+                case "26":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
 
@@ -279,25 +315,25 @@ public class UserInterface {
                     System.out.println("Short Description entered.");
                     break;
 
-                case "30":
+                case "27":
                     System.out.println("Enter the index of the task you wish to get the starting time: ");
                     num = scanner.nextInt();
                     System.out.println("Start Time: " + createdTasks.get(num).getStartTime());
                     break;
-                case "31":
+                case "28":
                     System.out.println("Enter the index of the task you wish to set the starting time: ");
                     num = scanner.nextInt();
                     System.out.println("Enter new starting time: ");
                     startTime = scanner.nextLine();
                     createdTasks.get(num).setStartTime(startTime);
                     break;
-                case "32":
+                case "29":
                     System.out.println("Enter the index of the task you wish to get the starting date: ");
                     num = scanner.nextInt();
 
                     System.out.println("Start Time: " + createdTasks.get(num).getStartDate());
                     break;
-                case "33":
+                case "30":
                     System.out.println("Enter the index of the task you wish to get the starting time: ");
                     num = scanner.nextInt();
 
@@ -305,13 +341,13 @@ public class UserInterface {
                     startTime = scanner.nextLine();
                     createdTasks.get(num).setStartDate(startTime);
                     break;
-                case "35":
+                case "31":
                     System.out.println("Enter the index of the task you wish to get the end time: ");
                     num = scanner.nextInt();
 
                     System.out.println("End Time: " + createdTasks.get(num).getEndTime());
                     break;
-                case "36":
+                case "32":
                     System.out.println("Enter the index of the task you wish to set the end time: ");
                     num = scanner.nextInt();
 
@@ -319,12 +355,12 @@ public class UserInterface {
                     endTime = scanner.nextLine();
                     createdTasks.get(num).setEndTime(endTime);
                     break;
-                case "37":
+                case "33":
                     System.out.println("Enter the index of the task you wish to get the end date: ");
                     num = scanner.nextInt();
                     System.out.println("End Time: " + createdTasks.get(num).getEndDate());
                     break;
-                case "38":
+                case "34":
                     System.out.println("Enter the index of the task you wish to set the end date: ");
                     num = scanner.nextInt();
 
@@ -332,13 +368,13 @@ public class UserInterface {
                     endDate = scanner.nextLine();
                     createdTasks.get(num).setEndDate(endDate);
                     break;
-                case "39":
+                case "35":
                     bubbleSortByEndDate(createdTasks);
                     break;
-                case "40":
+                case "36":
                     insertionSortByImportance(createdTasks);
                     break;
-                case "41":
+                case "37":
                     System.out.println("Please enter the task name you want to search for: ");
                     String targetName = scanner.nextLine();
                     int resultIndex = binarySearchByName(createdTasks, targetName);
@@ -348,7 +384,8 @@ public class UserInterface {
                     } else {
                         System.out.println("Task with name '" + targetName + "' not found.");
                     }
-                case "42":
+                    break;
+                case "38":
                     for (Object item : createdTasks) {
                         System.out.println(item);
                     }
@@ -359,8 +396,9 @@ public class UserInterface {
                     System.out.println("Enter the file name: ");
                     name = scanner.nextLine() + ".txt";
 
-                    taskManager.addTaskToFile(createdTasks.get(num), name);
-                case "43":
+//                    taskManager.addTaskToFile(createdTasks.get(num), name);
+                    break;
+                case "39":
                     for (Object item : createdTasks) {
                         System.out.println(item);
                     }
@@ -371,9 +409,9 @@ public class UserInterface {
                     System.out.println("Enter the file name: ");
                     name = scanner.nextLine() + ".txt";
 
-                    taskManager.removeTaskToFile(createdTasks.get(num), name);
+//                    taskManager.removeTaskToFile(createdTasks.get(num), name);
 
-
+                break;
                 default:
                     System.out.println("Unknown command: " + userInput);
                     break;

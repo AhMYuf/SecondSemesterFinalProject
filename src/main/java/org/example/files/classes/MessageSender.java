@@ -20,6 +20,8 @@ import java.util.TimerTask;
 public class MessageSender {
 
     private static final String EMAIL_FROM = "hacksmithinacoderverse@gmail.com";
+
+    private String Email_To = "hacksmithinacoderverse@gmail.com";
     private static final String APP_PASSWORD = "lipu zxdq vcum obgk";
 
     /**
@@ -46,7 +48,7 @@ public class MessageSender {
                 try {
                     MimeMessage mimeMessage = new MimeMessage(getEmailSession());
                     mimeMessage.setFrom(new InternetAddress(EMAIL_FROM));
-                    mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_FROM));
+                    mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(Email_To));
                     mimeMessage.setSubject(subject);
                     mimeMessage.setText(message);
                     Transport.send(mimeMessage);
@@ -82,5 +84,9 @@ public class MessageSender {
                 return new PasswordAuthentication(EMAIL_FROM, APP_PASSWORD);
             }
         });
+    }
+
+    public void setEmail_To(String email_To) {
+        Email_To = email_To;
     }
 }
