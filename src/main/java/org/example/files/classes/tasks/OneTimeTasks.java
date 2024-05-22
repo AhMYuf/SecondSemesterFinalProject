@@ -20,7 +20,8 @@ public class OneTimeTasks extends Task {
     private String levelOfImportance;
     private String completionStatus;
     protected ArrayList<String> listOfTags;
-    public DateAndTime dateAndTime;
+    private DateAndTime dateAndTime;
+
 
     /**
      * Constructs a new one-time task with the given parameters.
@@ -33,18 +34,20 @@ public class OneTimeTasks extends Task {
      * @param completionStatus  the completion status of the task
      * @param listTag           the list of tags associated with the task
      */
-    public OneTimeTasks(String taskName, String shortDescription, String endTime, String endDate, String levelOfImportance, String completionStatus, ArrayList<String> listTag) {
+    public OneTimeTasks(String taskName, String shortDescription, String endTime, String endDate, String levelOfImportance, String completionStatus, ArrayList<String> listTag, DateAndTime dateAndTime) {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
-        this.startDate = String.valueOf(dateAndTime.getDate());
+        this.dateAndTime = dateAndTime;  // Initialize the dateAndTime field
+        this.startDate = dateAndTime.getDate();
         this.endDate = endDate;
-        this.startTime = String.valueOf(dateAndTime.getTime(dateAndTime.getPatternHour()));
+        this.startTime = dateAndTime.getTime(dateAndTime.getPatternHour());
         this.endTime = endTime;
         this.levelOfImportance = levelOfImportance;
         this.completionStatus = completionStatus;
         this.listOfTags = listTag;
     }
+
 
     /**
      * Gets the next available task ID.

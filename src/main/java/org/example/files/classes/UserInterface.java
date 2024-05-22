@@ -353,7 +353,7 @@ public class UserInterface {
                         temp.add(tag);
                     }
 
-                    createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp));
+                    createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp, dateAndTime));
 
                     System.out.println("Enter title of the message: ");
                     String message = scanner.nextLine();

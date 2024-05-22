@@ -178,8 +178,7 @@ public class DateAndTime {
         long daysDifference = ChronoUnit.DAYS.between(inputDateTime, now);
         long hoursDifference = ChronoUnit.HOURS.between(inputDateTime, now) % 24;
 
-        String output = "The difference of days: " + daysDifference + ". The difference of hours: " + hoursDifference + ".";
-        return output;
+        return "The difference of days: " + daysDifference + ". The difference of hours: " + hoursDifference + ".";
     }
 
     /**
