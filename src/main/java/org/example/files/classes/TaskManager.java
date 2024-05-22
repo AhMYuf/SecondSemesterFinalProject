@@ -40,7 +40,6 @@ public class TaskManager {
         }
     }
 
-    // TODO add the task to the createdTasks
     public void addTaskToFile(OneTimeTasks task, String fileName) {
         List<OneTimeTasks> tasks = getAllTasks(fileName);
         tasks.add(task);
@@ -54,14 +53,6 @@ public class TaskManager {
         saveTasks(tasks, fileName);
     }
 
-
-    // Method to display all tasks
-    public void displayingTasks(String FILE_NAME) {
-        List<OneTimeTasks> tasks = getAllTasks(FILE_NAME);
-        for (OneTimeTasks task : tasks) {
-            System.out.println(task);
-        }
-    }
 
     // Helper method to load tasks from file
     private List<OneTimeTasks> getAllTasks(String fileName) {
@@ -85,9 +76,5 @@ public class TaskManager {
 
     public String getNameOfFolder() {
         return nameOfFolder;
-    }
-
-    public void setNameOfFolder(String nameOfFolder) {
-        this.nameOfFolder = nameOfFolder;
     }
 }

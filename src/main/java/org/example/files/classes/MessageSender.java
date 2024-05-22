@@ -1,12 +1,17 @@
 package org.example.files.classes;
 
-import jakarta.mail.*;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
@@ -20,17 +25,16 @@ public class MessageSender {
     /**
      * No instance can be made from this class
      */
-    private MessageSender() {}
+    public MessageSender() {}
 
     /**
      * Send email to a recipient at a later time
-     * @param recipient the one receiving the email
      * @param message the message or content of the email
      * @param subject the subject of the email
      * @param endDate the date when the email should be sent (format: "yyyy-MM-dd")
      * @param endTime the time when the email should be sent (format: "HH:mm:ss")
      */
-    public static void sendEmailAt(String recipient, String message, String subject, String endDate, String endTime) throws MessagingException {
+    public  void sendEmailAt(String message, String subject, String endDate, String endTime) throws MessagingException {
         String dateTime = endDate + " " + endTime;
         LocalDateTime sendDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Date date = Date.from(sendDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -42,7 +46,7 @@ public class MessageSender {
                 try {
                     MimeMessage mimeMessage = new MimeMessage(getEmailSession());
                     mimeMessage.setFrom(new InternetAddress(EMAIL_FROM));
-                    mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+                    mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_FROM));
                     mimeMessage.setSubject(subject);
                     mimeMessage.setText(message);
                     Transport.send(mimeMessage);
@@ -78,14 +82,5 @@ public class MessageSender {
                 return new PasswordAuthentication(EMAIL_FROM, APP_PASSWORD);
             }
         });
-    }
-
-    public static void main(String[] args) {
-        try {
-            // Schedule email to be sent at a specific date and time
-            sendEmailAt("recipient@example.com", "This is a scheduled email.", "Scheduled Email", "2024-05-21", "18:00:00");
-        } catch (MessagingException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

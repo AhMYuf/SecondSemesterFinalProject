@@ -1,15 +1,13 @@
 package org.example.files.classes;
 
+import jakarta.mail.MessagingException;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 import org.example.files.classes.tasks.OneTimeTasks;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class UserInterface {
     DateAndTime dateAndTime;
@@ -21,7 +19,7 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         DateAndTime dateAndTime = new DateAndTime();
 
-        String strTemp = "";
+        String strTemp;
 
         System.out.println("Please enter your time zone: ");
         strTemp = scanner.nextLine();
@@ -29,7 +27,7 @@ public class UserInterface {
 
     }
 
-    public void loop() {
+    public void loop()  {
         Scanner scanner = new Scanner(System.in);
         String userInput = "";
         String date;
@@ -120,6 +118,7 @@ public class UserInterface {
                     name = scanner.nextLine();
                     taskManager.createFile(name);
                 case "14":
+                    MessageSender messageSender = new MessageSender();
                     System.out.println("Please enter the required information for your task: ");
 
                     System.out.println("Task name: ");
@@ -165,6 +164,17 @@ public class UserInterface {
                     }
 
                     createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp));
+
+                    System.out.println("Enter title of the message: ");
+                    String message = scanner.nextLine();
+
+                    System.out.println("Enter the message you wish to send: ");
+                    String subject = scanner.nextLine();
+                    try {
+                        messageSender.sendEmailAt(message, subject, endDate, endTime);
+                    } catch (MessagingException e) {
+                        System.out.println("Failed to send email: " + e.getMessage());
+                    }
 
                 case "15":
                     System.out.print("Enter tag to add: ");
@@ -234,7 +244,6 @@ public class UserInterface {
 
                 case "22":
                     System.out.println("Next ID: " + OneTimeTasks.getNextId());
-                    // TODO this will be saved
                     break;
                 case "24":
                     System.out.println("Please enter the index of element you wish to get the ID: ");
@@ -324,6 +333,46 @@ public class UserInterface {
                     createdTasks.get(num).setEndDate(endDate);
                     break;
                 case "39":
+                    bubbleSortByEndDate(createdTasks);
+                    break;
+                case "40":
+                    insertionSortByImportance(createdTasks);
+                    break;
+                case "41":
+                    System.out.println("Please enter the task name you want to search for: ");
+                    String targetName = scanner.nextLine();
+                    int resultIndex = binarySearchByName(createdTasks, targetName);
+                    if (resultIndex != -1) {
+                        OneTimeTasks foundTask = createdTasks.get(resultIndex);
+                        System.out.println("Task found: " + foundTask);
+                    } else {
+                        System.out.println("Task with name '" + targetName + "' not found.");
+                    }
+                case "42":
+                    for (Object item : createdTasks) {
+                        System.out.println(item);
+                    }
+
+                    System.out.println("Give the index of the item you wish to add to a specific file: ");
+                    num = scanner.nextInt() - 1;
+
+                    System.out.println("Enter the file name: ");
+                    name = scanner.nextLine() + ".txt";
+
+                    taskManager.addTaskToFile(createdTasks.get(num), name);
+                case "43":
+                    for (Object item : createdTasks) {
+                        System.out.println(item);
+                    }
+
+                    System.out.println("Give the index of the item you wish to remove from a specific file: ");
+                    num = scanner.nextInt() - 1;
+
+                    System.out.println("Enter the file name: ");
+                    name = scanner.nextLine() + ".txt";
+
+                    taskManager.removeTaskToFile(createdTasks.get(num), name);
+
 
                 default:
                     System.out.println("Unknown command: " + userInput);
@@ -376,6 +425,27 @@ public class UserInterface {
             }
             createdTasks.set(j + 1, key);
         }
+    }
+
+    public static int binarySearchByName(ArrayList<OneTimeTasks> createdTasks, String targetName) {
+        Collections.sort(createdTasks, Comparator.comparing(OneTimeTasks::getTaskName));
+
+        int low = 0;
+        int high = createdTasks.size() - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            String midName = createdTasks.get(mid).getTaskName();
+
+            if (midName.compareTo(targetName) < 0) {
+                low = mid + 1;
+            } else if (midName.compareTo(targetName) > 0) {
+                high = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
     }
 }
 
