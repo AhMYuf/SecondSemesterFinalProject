@@ -1,17 +1,12 @@
 package org.example.files.classes;
 
-import jakarta.mail.Authenticator;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
+import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Timer;
@@ -19,8 +14,8 @@ import java.util.TimerTask;
 
 public class MessageSender {
 
-    private static final String EMAIL_FROM = "holyboom4@gmail.com";
-    private static final String APP_PASSWORD = "mrrh uijr ijox zupc";
+    private static final String EMAIL_FROM = "hacksmithinacoderverse@gmail.com";
+    private static final String APP_PASSWORD = "lipu zxdq vcum obgk";
 
     /**
      * No instance can be made from this class

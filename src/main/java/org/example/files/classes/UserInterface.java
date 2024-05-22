@@ -4,7 +4,11 @@ import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 import org.example.files.classes.tasks.OneTimeTasks;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -14,12 +18,16 @@ public class UserInterface {
     ArrayList<OneTimeTasks> createdTasks;
 
     public void gettingUserData() {
-        System.out.println("Please enter your time zone");
+        Scanner scanner = new Scanner(System.in);
+        DateAndTime dateAndTime = new DateAndTime();
 
+        String strTemp = "";
 
+        System.out.println("Please enter your time zone: ");
+        strTemp = scanner.nextLine();
+        dateAndTime.setZoneIdString(strTemp);
 
     }
-
 
     public void loop() {
         Scanner scanner = new Scanner(System.in);
@@ -50,7 +58,7 @@ public class UserInterface {
                     }
                     break;
                 case "1":
-                    date = dateAndTime.getDate(dateAndTime.getPatternDay());
+                    date = dateAndTime.getDate();
                     System.out.println("Today is: " + date);
                     break;
                 case "2":
@@ -105,6 +113,7 @@ public class UserInterface {
                     System.out.println("Please enter the name of the folder: ");
                     name = scanner.nextLine();
                     taskManager = new TaskManager(name);
+
                     break;
                 case "13":
                     System.out.println("Please enter the name of the file: ");
@@ -198,13 +207,6 @@ public class UserInterface {
 
                     for (OneTimeTasks item : createdTasks) {
                         item.tagExists(tagToCheck);
-//                        for (int i = 0; i < item.getListOfTags().size(); i++) {
-//                            if (item.getListOfTags().equals(tagToCheck)) {
-//                                System.out.println("The entered tag exist.");
-//                            } else {
-//                                System.out.println("Tag does not exist.");
-//                            }
-//                        }
                     }
                     break;
                 case "19":
@@ -321,11 +323,58 @@ public class UserInterface {
                     endDate = scanner.nextLine();
                     createdTasks.get(num).setEndDate(endDate);
                     break;
+                case "39":
+
                 default:
                     System.out.println("Unknown command: " + userInput);
                     break;
             }
             scanner.close();
+        }
+    }
+
+
+    public static void bubbleSortByEndDate(ArrayList<OneTimeTasks> createdTasks) {
+        int n = createdTasks.size();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                LocalDate date1 = LocalDate.parse(createdTasks.get(j).getEndDate(), formatter);
+                LocalDate date2 = LocalDate.parse(createdTasks.get(j + 1).getEndDate(), formatter);
+                if (date1.isAfter(date2)) {
+                    // Swap tasks[j] and tasks[j+1]
+                    OneTimeTasks temp = createdTasks.get(j);
+                    createdTasks.set(j, createdTasks.get(j + 1));
+                    createdTasks.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    public static void insertionSortByImportance(ArrayList<OneTimeTasks> createdTasks) {
+        Map<String, Integer> importanceMap = new HashMap<>();
+        importanceMap.put("CRITICAL", 0);
+        importanceMap.put("HIGH_PRIORITY", 1);
+        importanceMap.put("MEDIUM_HIGH_PRIORITY", 2);
+        importanceMap.put("MEDIUM_PRIORITY", 3);
+        importanceMap.put("MEDIUM_LOW_PRIORITY", 4);
+        importanceMap.put("LOW_PRIORITY", 5);
+        importanceMap.put("OPTIONAL", 6);
+        importanceMap.put("SOMEDAY", 7);
+        importanceMap.put("TRIVIAL", 8);
+
+        int n = createdTasks.size();
+        for (int i = 1; i < n; i++) {
+            OneTimeTasks key = createdTasks.get(i);
+            int keyImportance = importanceMap.get(key.getLevelOfImportance());
+            int j = i - 1;
+
+            // Compare current element with the sorted portion
+            while (j >= 0 && importanceMap.get(createdTasks.get(j).getLevelOfImportance()) > keyImportance) {
+                createdTasks.set(j + 1, createdTasks.get(j));
+                j = j - 1;
+            }
+            createdTasks.set(j + 1, key);
         }
     }
 }

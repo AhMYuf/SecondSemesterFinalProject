@@ -17,9 +17,9 @@ import java.util.Comparator;
  */
 public class DateAndTime {
 
-    String zoneIdString;
-    String patternDay;
-    String patternHour;
+    String zoneIdString = "America/New_York";
+    String patternDay = "dd-MM-yyyy";
+    String patternHour = "HH:mm:ss";
 
     UserDataSaving dataSaving;
 
@@ -30,17 +30,16 @@ public class DateAndTime {
     }
 
     public DateAndTime() {
-        this.zoneIdString = "America/New_York";
-        this.patternDay = "dd-MM-yyyy";
-        this.patternHour = "HH:mm:ss";
+
     }
+
 
     /**
      * This method gets the current date of an individual depending on their time zone
      *
      * @return String date
      */
-    public String getDate(String patternDay) {
+    public String getDate() {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternDay);
@@ -110,6 +109,9 @@ public class DateAndTime {
             zoneIdString = zoneIdString.substring(0,slash) +"/"+ City;
     }
 
+    public void setZoneIdString(String zoneId) {
+        this.zoneIdString = zoneId;
+    }
 
     /**
      * This method checks whether a date is still valid today (has yet to come)
@@ -118,7 +120,7 @@ public class DateAndTime {
      * @return boolean
      */
     public boolean dateValidToday(String dateString) {
-        return getDate(patternDay).equals(dateString);
+        return getDate().equals(dateString);
     }
 
     /**
@@ -174,6 +176,6 @@ class DateComparator implements Comparator<DateAndTime> {
      */
     @Override
     public int compare(DateAndTime o1, DateAndTime o2) {
-        return o1.getDate(o1.patternDay).compareTo(o2.getDate(o2.patternDay));
+        return o1.getDate().compareTo(o2.getDate());
     }
 }

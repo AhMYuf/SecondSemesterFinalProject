@@ -24,7 +24,7 @@ public class OneTimeTasks extends Task {
         this.taskId = String.format("D%03d", nextId++);
         this.taskName = taskName;
         this.shortDescription = shortDescription;
-        this.startDate = String.valueOf(dateAndTime.getDate(dateAndTime.getPatternDay()));
+        this.startDate = String.valueOf(dateAndTime.getDate());
         this.endDate = endDate;
         this.startTime = String.valueOf(dateAndTime.getTime(dateAndTime.getPatternHour()));
         this.endTime = endTime;
@@ -33,24 +33,6 @@ public class OneTimeTasks extends Task {
         this.listOfTags = listTag;
     }
 
-
-//    public void addTags(String tag, OneTimeTasks oneTimeTasks) {
-//        ArrayList<String> temp = oneTimeTasks.getListOfTags();
-//
-//        if (tag != null && !temp.contains(tag.toUpperCase())) {
-//            temp.add(tag.toUpperCase());
-//        }
-//        oneTimeTasks.setListOfTags(temp);
-//    }
-//
-//    public void removeTags(String tag, OneTimeTasks oneTimeTasks) {
-//        ArrayList<String> temp = oneTimeTasks.getListOfTags();
-//
-//        if (temp != null && tag != null && temp.contains(tag.toUpperCase())) {
-//            temp.remove(tag.toUpperCase());
-//        }
-//        oneTimeTasks.setListOfTags(temp);
-//    }
 
     public boolean tagExists(String tag) {
         List<String> temp = listOfTags;
@@ -91,6 +73,14 @@ public class OneTimeTasks extends Task {
                 ", completionStatus=" + completionStatus +
                 ", listOfTags=" + listOfTags +
                 '}';
+    }
+
+    public String getLevelOfImportance() {
+        return levelOfImportance;
+    }
+
+    public void setLevelOfImportance(String levelOfImportance) {
+        this.levelOfImportance = levelOfImportance;
     }
 
     public static int getNextId() {
