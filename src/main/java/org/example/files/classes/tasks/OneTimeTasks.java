@@ -39,7 +39,7 @@ public class OneTimeTasks extends Task {
         this.taskName = taskName;
         this.shortDescription = shortDescription;
         this.dateAndTime = dateAndTime;  // Initialize the dateAndTime field
-        this.startDate = dateAndTime.getDate();
+        this.startDate = dateAndTime.getDate(dateAndTime.getZoneIdString());
         this.endDate = endDate;
         this.startTime = dateAndTime.getTime(dateAndTime.getPatternHour());
         this.endTime = endTime;

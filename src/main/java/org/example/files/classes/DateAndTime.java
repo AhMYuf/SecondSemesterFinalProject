@@ -54,8 +54,8 @@ public class DateAndTime {
      *
      * @return The current date.
      */
-    public String getDate() {
-        ZoneId zoneId = ZoneId.of(this.zoneIdString);
+    public String getDate(String zoneIdString) {
+        ZoneId zoneId = ZoneId.of(zoneIdString);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternDay);
         return now.format(formatter);
@@ -151,7 +151,7 @@ public class DateAndTime {
      * @return True if the date is valid for today, false otherwise.
      */
     public boolean dateValidToday(String dateString) {
-        return getDate().equals(dateString);
+        return getDate(getZoneIdString()).equals(dateString);
     }
 
     /**

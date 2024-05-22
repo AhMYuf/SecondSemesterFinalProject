@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class UserInterface {
-    DateAndTime dateAndTime;
     TaskManager taskManager;
     MessageSender messageSender;
     UserDataSaving userDataSaving;
@@ -103,6 +102,7 @@ public class UserInterface {
      * This method allows user to create a saving file where he can deposit all personal information related to him.
      */
     public void gettingUserData() {
+        DateAndTime dateAndTime = new DateAndTime();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter folder path: ");
         String foldPath = scanner.nextLine(); // "/Users/ahmetyusufyildirim/Desktop";
@@ -138,7 +138,6 @@ public class UserInterface {
      * This method allows for the user to interact with the program.
      */
     public void loop()  {
-        Scanner scanner = new Scanner(System.in);
         String userInput = "";
         String date;
         String time;
@@ -153,10 +152,10 @@ public class UserInterface {
         int index;
 
         while (!userInput.equals("STOP")) {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter the number of action you wish to perform: ");
             System.out.println(
                     """
-                            0. Create a new DateAndTime object.
                             1. Display today's date.
                             2. Display the current time.
                             3. Check if a date is valid.
@@ -200,27 +199,11 @@ public class UserInterface {
                             41. Change the level of importance of a task.
                             42. Change the completion status of a task."""
             );
-
-            userInput = scanner.nextLine();
+            userInput = scanner.nextLine().toUpperCase();
+            DateAndTime dateAndTime = new DateAndTime("America/New_York", "dd-MM-yyyy", "HH:mm:ss");
             switch (userInput) {
-                case "0":
-                    System.out.println("Please enter '1' for empty constructor, and '2' for personal input: ");
-                    num = scanner.nextInt();
-                    if (num == 1) {
-                        DateAndTime dateAndTime = new DateAndTime();
-                    } else {
-                        System.out.println("Please enter your zoneId: ");
-                        String zone = scanner.nextLine();
-                        System.out.println("Please enter your day pattern: ");
-                        String dayPattern = scanner.nextLine();
-                        System.out.println("Please enter your time pattern: ");
-                        String timePattern = scanner.nextLine();
-                        DateAndTime dateAndTime = new DateAndTime(zone, dayPattern, timePattern);
-                        System.out.println("Creating a new date object ... ");
-                    }
-                    break;
                 case "1":
-                    date = dateAndTime.getDate();
+                    date = dateAndTime.getDate(dateAndTime.getZoneIdString());
                     System.out.println("Today is: " + date);
                     break;
                 case "2":
