@@ -1,6 +1,5 @@
 package org.example.files.classes;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -10,34 +9,41 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 
 /**
- * This class deals with everything relative to time & date.
+ * This class handles operations related to date and time.
  */
 public class DateAndTime {
 
-    String zoneIdString = "America/New_York";
-    String patternDay = "dd-MM-yyyy";
-    String patternHour = "HH:mm:ss";
+    private String zoneIdString = "America/New_York";
+    private String patternDay = "dd-MM-yyyy";
+    private String patternHour = "HH:mm:ss";
+    private UserDataSaving dataSaving;
 
-    UserDataSaving dataSaving;
+    /**
+     * Constructs a DateAndTime object with default settings.
+     */
+    public DateAndTime() {
 
+    }
+
+    /**
+     * Constructs a DateAndTime object with the specified settings.
+     *
+     * @param zoneIdString The time zone ID string.
+     * @param patternDay   The pattern for day formatting.
+     * @param patternHour  The pattern for hour formatting.
+     */
     public DateAndTime(String zoneIdString, String patternDay, String patternHour) {
         this.zoneIdString = zoneIdString;
         this.patternDay = patternDay;
         this.patternHour = patternHour;
     }
 
-    public DateAndTime() {
-
-    }
-
-
     /**
-     * This method gets the current date of an individual depending on their time zone
+     * Gets the current date based on the time zone.
      *
-     * @return String date
+     * @return The current date.
      */
     public String getDate() {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
@@ -46,6 +52,12 @@ public class DateAndTime {
         return now.format(formatter);
     }
 
+    /**
+     * Sets the time range and validates it.
+     *
+     * @param start The start time.
+     * @param end   The end time.
+     */
     void setTime(String start, String end) {
         try {
             LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -63,9 +75,10 @@ public class DateAndTime {
     }
 
     /**
-     * This method gets the time of an individual depending on their time zone
+     * Gets the current time based on the time zone.
      *
-     * @return String time
+     * @param patternHour The pattern for hour formatting.
+     * @return The current time.
      */
     public String getTime(String patternHour) {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
@@ -75,10 +88,10 @@ public class DateAndTime {
     }
 
     /**
-     * This method checks whether a date actually exists or not
+     * Checks if a given date exists.
      *
-     * @param dateString    inputted date
-     * @return boolean
+     * @param dateString The date string to check.
+     * @return True if the date exists, false otherwise.
      */
     public boolean dateExists(String dateString) {
         SimpleDateFormat sdf;
@@ -97,39 +110,47 @@ public class DateAndTime {
         }
     }
 
-    public String getZoneIdString() {
-        return zoneIdString;
-    }
-
+    /**
+     * Sets the time zone string.
+     *
+     * @param Continent The continent name.
+     * @param City      The city name.
+     * @param option    The option to set (1 or 2).
+     * @throws IllegalArgumentException If the option is invalid.
+     */
     public void setZoneIdString(String Continent, String City, int option) throws IllegalArgumentException {
         int slash = zoneIdString.indexOf('/');
         if (option == 1)
             zoneIdString = Continent + "/" + City;
         else
-            zoneIdString = zoneIdString.substring(0,slash) +"/"+ City;
+            zoneIdString = zoneIdString.substring(0, slash) + "/" + City;
     }
 
+    /**
+     * Sets the time zone string.
+     *
+     * @param zoneId The time zone ID string.
+     */
     public void setZoneIdString(String zoneId) {
         this.zoneIdString = zoneId;
     }
 
     /**
-     * This method checks whether a date is still valid today (has yet to come)
+     * Checks if a date is valid for today.
      *
-     * @param dateString inputted date
-     * @return boolean
+     * @param dateString The date string to check.
+     * @return True if the date is valid for today, false otherwise.
      */
     public boolean dateValidToday(String dateString) {
         return getDate().equals(dateString);
     }
 
     /**
-     * This method compares a given date and time to the current date and time of the object
-     * and returns the numerical difference in days and hours.
+     * Compares a given date and time to the current date and time and returns the difference.
      *
-     * @param dateString The date to compare in the format of patternDay.
-     * @param timeString The time to compare in the format of patternHour.
-     * @return String representing the difference in days and hours.
+     * @param dateString The date string to compare.
+     * @param timeString The time string to compare.
+     * @return The difference between the given date and time and the current date and time.
      */
     public String compareDateTime(String dateString, String timeString) {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
@@ -152,6 +173,10 @@ public class DateAndTime {
         return "Difference: " + Math.abs(daysDifference) + " days and " + Math.abs(hoursDifference) + " hours";
     }
 
+    public String getZoneIdString() {
+        return zoneIdString;
+    }
+
     public String getPatternDay() {
         return patternDay;
     }
@@ -169,13 +194,3 @@ public class DateAndTime {
     }
 }
 
-class DateComparator implements Comparator<DateAndTime> {
-    /**
-     * compares the today's date format and the entered date format of the entered date
-     * then I have to create a method that will essentially change it to make it the same
-     */
-    @Override
-    public int compare(DateAndTime o1, DateAndTime o2) {
-        return o1.getDate().compareTo(o2.getDate());
-    }
-}

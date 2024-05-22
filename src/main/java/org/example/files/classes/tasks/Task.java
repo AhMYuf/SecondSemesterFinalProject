@@ -8,4 +8,8 @@ abstract class Task {
     protected CompletionStatus completionStatus;
     abstract String setDate(String date);
 
+    /*
+     * Normally there was going to be multiple variations of tasks, but due to a file saving issue, I lost all progress
+     * causing me to rush the project.
+     */
 }
