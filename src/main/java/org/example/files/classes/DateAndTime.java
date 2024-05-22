@@ -14,18 +14,27 @@ import java.time.temporal.ChronoUnit;
  * This class handles operations related to date and time.
  */
 public class DateAndTime {
-
+    /**
+     * The time zone ID string.
+     */
     private String zoneIdString = "America/New_York";
+
+    /**
+     * The pattern for day formatting.
+     */
     private String patternDay = "dd-MM-yyyy";
+
+    /**
+     * The pattern for hour formatting.
+     */
     private String patternHour = "HH:mm:ss";
-    private UserDataSaving dataSaving;
 
     /**
      * Constructs a DateAndTime object with default settings.
      */
     public DateAndTime() {
-
     }
+
 
     /**
      * Constructs a DateAndTime object with the specified settings.
@@ -150,7 +159,6 @@ public class DateAndTime {
      *
      * @param dateString The date string to compare.
      * @param timeString The time string to compare.
-     * @return The difference between the given date and time and the current date and time.
      */
     public String compareDateTime(String dateString, String timeString) {
         ZoneId zoneId = ZoneId.of(this.zoneIdString);
@@ -162,7 +170,7 @@ public class DateAndTime {
             date = LocalDate.parse(dateString, java.time.format.DateTimeFormatter.ofPattern(patternDay));
             time = LocalTime.parse(timeString, java.time.format.DateTimeFormatter.ofPattern(patternHour));
         } catch (Exception e) {
-            return "Invalid date or time format";
+            return "There was an error while trying to get the date and time.";
         }
 
         ZonedDateTime inputDateTime = ZonedDateTime.of(date, time, zoneId);
@@ -170,27 +178,54 @@ public class DateAndTime {
         long daysDifference = ChronoUnit.DAYS.between(inputDateTime, now);
         long hoursDifference = ChronoUnit.HOURS.between(inputDateTime, now) % 24;
 
-        return "Difference: " + Math.abs(daysDifference) + " days and " + Math.abs(hoursDifference) + " hours";
+        String output = "The difference of days: " + daysDifference + ". The difference of hours: " + hoursDifference + ".";
+        return output;
     }
 
+    /**
+     * Gets the time zone ID string.
+     *
+     * @return The time zone
+     */
     public String getZoneIdString() {
         return zoneIdString;
     }
 
+    /**
+     * Gets the pattern for day formatting.
+     *
+     * @return The pattern for day formatting.
+     */
     public String getPatternDay() {
         return patternDay;
     }
 
+    /**
+     * Sets the pattern for day formatting.
+     *
+     * @param patternDay The pattern for day formatting.
+     */
     public void setPatternDay(String patternDay) {
         this.patternDay = patternDay;
     }
 
+    /**
+     * Gets the pattern for hour formatting.
+     *
+     * @return The pattern for hour formatting.
+     */
     public String getPatternHour() {
         return patternHour;
     }
 
+    /**
+     * Sets the pattern for hour formatting.
+     *
+     * @param patternHour The pattern for hour formatting.
+     */
     public void setPatternHour(String patternHour) {
         this.patternHour = patternHour;
     }
+
 }
 

@@ -243,7 +243,7 @@ public class UserInterface {
                     date = scanner.nextLine();
                     System.out.println("Please enter the end time: ");
                     time = scanner.nextLine();
-                    dateAndTime.compareDateTime(date, time);
+                    System.out.println(dateAndTime.compareDateTime(date, time));
                     break;
                 case "8":
                     System.out.println("The day pattern is: " + dateAndTime.getPatternDay());
