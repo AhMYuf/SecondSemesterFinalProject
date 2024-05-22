@@ -29,10 +29,7 @@ public class TaskManager {
         try {
             return folder.mkdir();
         } catch (SecurityException e) {
-            System.err.println("SecurityException: " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            logger.log(Level.SEVERE, "SecurityException occurred while creating folder: " + folderPath, e);
             return false;
         }
     }
@@ -41,19 +38,19 @@ public class TaskManager {
      * Creates a file at the specified path with the given file name.
      *
      * @param path The path where the file will be created.
-     * @param file The name of the file to be created.
+     * @param fileName The name of the file to be created.
      */
-    public static void createFile(String path, String file) {
-        String fileName = String.format("%s/%s.txt", path, file);
+    public static void createFile(String path, String fileName) {
+        String filePath = path + File.separator + fileName;
         try {
-            File file1 = new File(fileName);
-            if (file1.createNewFile()) {
-                System.out.println("File1 created successfully");
+            File file = new File(filePath);
+            if (file.createNewFile()) {
+                logger.info("File created successfully: " + filePath);
             } else {
-                System.out.println("File1 already exists");
+                logger.info("File already exists: " + filePath);
             }
         } catch (IOException e) {
-            System.out.println("An error occurred while creating files");
+            logger.log(Level.SEVERE, "An error occurred while creating file: " + filePath, e);
         }
     }
 
@@ -90,12 +87,13 @@ public class TaskManager {
      * @param fileName The name of the file from which tasks will be loaded.
      * @return The list of tasks loaded from the file.
      */
-    private List<OneTimeTasks> getAllTasks(String path, String fileName) {
+    private static List<OneTimeTasks> getAllTasks(String path, String fileName) {
         List<OneTimeTasks> tasks = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path + "/" + fileName))) {
+        String filePath = path + File.separator + fileName;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             tasks = (List<OneTimeTasks>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Error occurred while reading tasks from file: " + path + "/" + fileName, e);
+            logger.log(Level.SEVERE, "Error occurred while reading tasks from file: " + filePath, e);
         }
         return tasks;
     }
@@ -107,11 +105,12 @@ public class TaskManager {
      * @param path     The path where the file is located.
      * @param fileName The name of the file to which tasks will be saved.
      */
-    private void saveTasks(List<OneTimeTasks> tasks, String path, String fileName) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path + "/" + fileName))) {
+    private static void saveTasks(List<OneTimeTasks> tasks, String path, String fileName) {
+        String filePath = path + File.separator + fileName;
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(tasks);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error occurred while saving tasks to file: " + path + "/" + fileName, e);
+            logger.log(Level.SEVERE, "Error occurred while saving tasks to file: " + filePath, e);
         }
     }
 }
