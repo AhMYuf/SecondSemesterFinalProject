@@ -3,9 +3,7 @@ package org.example.files.classes;
 import jakarta.mail.MessagingException;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
-import org.example.files.classes.tasks.DateComparator;
 import org.example.files.classes.tasks.OneTimeTasks;
-import org.example.files.classes.tasks.TimeComparator;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -18,6 +16,7 @@ public class UserInterface {
     MessageSender messageSender;
     UserDataSaving userDataSaving;
     ArrayList<OneTimeTasks> createdTasks;
+
 
     /**
      * This method allow OneTimeTasks objects to be classed according to their
@@ -63,7 +62,6 @@ public class UserInterface {
             int keyImportance = importanceMap.get(key.getLevelOfImportance());
             int j = i - 1;
 
-            // Compare current element with the sorted portion
             while (j >= 0 && importanceMap.get(createdTasks.get(j).getLevelOfImportance()) > keyImportance) {
                 createdTasks.set(j + 1, createdTasks.get(j));
                 j = j - 1;
@@ -149,47 +147,51 @@ public class UserInterface {
         while (!userInput.equals("STOP")) {
             System.out.println("Please enter the number of action you wish to perform: ");
             System.out.println(
-                    "0. Create a new DateAndTime object.\n" +
-                    "1. Display today's date.\n" +
-                    "2. Display the current time.\n" +
-                    "3. Check if a date is valid.\n" +
-                    "4. Check if a date is valid today.\n" +
-                    "5. Set the zone according to a continent and city or change the city.\n" +
-                    "6. Display the current zone.\n" +
-                    "7. Compare a given date and time with the current date and time.\n" +
-                    "8. Display the current day pattern.\n" +
-                    "9. Display the current time pattern.\n" +
-                    "10. Set a new date pattern.\n" +
-                    "11. Set a new time pattern.\n" +
-                    "12. Sort created tasks by dates and times.\n" +
-                    "13. Create a new folder.\n" +
-                    "14. Create a new file.\n" +
-                    "15. Create a new task and send a message.\n" +
-                    "16. Add a tag to a task.\n" +
-                    "17. Remove a tag from a task.\n" +
-                    "18. Display tags of all tasks.\n" +
-                    "19. Check if a tag exists in any task.\n" +
-                    "20. Set a new date for a task.\n" +
-                    "21. Set start and end times.\n" +
-                    "22. Display the next task ID.\n" +
-                    "23. Display the task ID at a specific index.\n" +
-                    "24. Display the task name at a specific index.\n" +
-                    "25. Modify the name of a task.\n" +
-                    "26. Display the short description of a task.\n" +
-                    "27. Modify the short description of a task.\n" +
-                    "28. Display the start time of a task.\n" +
-                    "29. Set the start time of a task.\n" +
-                    "30. Display the start date of a task.\n" +
-                    "31. Set the start date of a task.\n" +
-                    "32. Display the end time of a task.\n" +
-                    "33. Set the end time of a task.\n" +
-                    "34. Display the end date of a task.\n" +
-                    "35. Set the end date of a task.\n" +
-                    "36. Sort tasks by end date using bubble sort.\n" +
-                    "37. Sort tasks by importance using insertion sort.\n" +
-                    "38. Search for a task by name using binary search.\n" +
-                    "39. Add a task to a specific file.\n" +
-                    "40. Remove a task from a specific file.");
+                            "0. Create a new DateAndTime object.\n" +
+                            "1. Display today's date.\n" +
+                            "2. Display the current time.\n" +
+                            "3. Check if a date is valid.\n" +
+                            "4. Check if a date is valid today.\n" +
+                            "5. Set the zone according to a continent and city or change the city.\n" +
+                            "6. Display the current zone.\n" +
+                            "7. Compare a given date and time with the current date and time.\n" +
+                            "8. Display the current day pattern.\n" +
+                            "9. Display the current time pattern.\n" +
+                            "10. Set a new date pattern.\n" +
+                            "11. Set a new time pattern.\n" +
+                            "12. Sort created tasks by dates and times.\n" +
+                            "13. Create a new folder.\n" +
+                            "14. Create a new file.\n" +
+                            "15. Create a new task and send a message.\n" +
+                            "16. Add a tag to a task.\n" +
+                            "17. Remove a tag from a task.\n" +
+                            "18. Display tags of all tasks.\n" +
+                            "19. Check if a tag exists in any task.\n" +
+                            "20. Set a new date for a task.\n" +
+                            "21. Set start and end times.\n" +
+                            "22. Display the next task ID.\n" +
+                            "23. Display the task ID at a specific index.\n" +
+                            "24. Display the task name at a specific index.\n" +
+                            "25. Modify the name of a task.\n" +
+                            "26. Display the short description of a task.\n" +
+                            "27. Modify the short description of a task.\n" +
+                            "28. Display the start time of a task.\n" +
+                            "29. Set the start time of a task.\n" +
+                            "30. Display the start date of a task.\n" +
+                            "31. Set the start date of a task.\n" +
+                            "32. Display the end time of a task.\n" +
+                            "33. Set the end time of a task.\n" +
+                            "34. Display the end date of a task.\n" +
+                            "35. Set the end date of a task.\n" +
+                            "36. Sort tasks by end date using bubble sort.\n" +
+                            "37. Sort tasks by importance using insertion sort.\n" +
+                            "38. Search for a task by name using binary search.\n" +
+                            "39. Add a task to a specific file.\n" +
+                            "40. Remove a task from a specific file.\n" +
+                            "41. Change the level of importance of a task.\n" +
+                            "42. Change the completion status of a task."
+            );
+
             userInput = scanner.nextLine();
             switch (userInput) {
                 case "0":
@@ -322,6 +324,7 @@ public class UserInterface {
                     for (int i = 0; i < LevelOfImportance.values().length; i++) {
                         System.out.println((i + 1) + ". " + LevelOfImportance.values()[i]);
                     }
+                    scanner.nextLine();
 
                     System.out.print("Enter your choice: ");
                     num = scanner.nextInt();
@@ -341,6 +344,8 @@ public class UserInterface {
                     System.out.println("Enter the number of tags: ");
                     num = scanner.nextInt();
 
+                    scanner.nextLine();
+
                     ArrayList<String> temp = new ArrayList<>();
                     for (int i = 0; i < num; i++) {
                         System.out.println("Enter the tag(s): ");
@@ -352,6 +357,12 @@ public class UserInterface {
 
                     System.out.println("Enter title of the message: ");
                     String message = scanner.nextLine();
+
+                    System.out.println("Please enter the date that you want to receive the notification: ");
+                    endDate =scanner.nextLine();
+
+                    System.out.println("Please enter the time you wish to be notified: ");
+                    endTime = scanner.nextLine();
 
                     System.out.println("Enter the message you wish to send: ");
                     String subject = scanner.nextLine();
@@ -430,6 +441,7 @@ public class UserInterface {
                     String startTime = scanner.nextLine();
                     System.out.print("Enter end time (HH:mm:ss): ");
                     endTime = scanner.nextLine();
+                    scanner.nextLine();
                     dateAndTime.setTime(startTime, endTime);
                     break;
                 case "22":
@@ -448,7 +460,7 @@ public class UserInterface {
                 case "25":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
-
+                    scanner.nextLine();
                     System.out.print("Enter new task name: ");
                     taskName = scanner.nextLine();
                     createdTasks.get(num).setTaskName(taskName);
@@ -462,7 +474,7 @@ public class UserInterface {
                 case "27":
                     System.out.println("Enter the index of the task you wish to modify the name: ");
                     num = scanner.nextInt();
-
+                    scanner.nextLine();
                     System.out.print("Enter new short description: ");
                     String shortDescription = scanner.nextLine();
                     createdTasks.get(num).setShortDescription(shortDescription);
@@ -477,6 +489,7 @@ public class UserInterface {
                 case "29":
                     System.out.println("Enter the index of the task you wish to set the starting time: ");
                     num = scanner.nextInt();
+                    scanner.nextLine();
                     System.out.println("Enter new starting time: ");
                     startTime = scanner.nextLine();
                     createdTasks.get(num).setStartTime(startTime);
@@ -490,7 +503,7 @@ public class UserInterface {
                 case "31":
                     System.out.println("Enter the index of the task you wish to get the starting time: ");
                     num = scanner.nextInt();
-
+                    scanner.nextLine();
                     System.out.println("Enter new starting date: ");
                     startTime = scanner.nextLine();
                     createdTasks.get(num).setStartDate(startTime);
@@ -504,7 +517,7 @@ public class UserInterface {
                 case "33":
                     System.out.println("Enter the index of the task you wish to set the end time: ");
                     num = scanner.nextInt();
-
+                    scanner.nextLine();
                     System.out.println("Enter new end time: ");
                     endTime = scanner.nextLine();
                     createdTasks.get(num).setEndTime(endTime);
@@ -517,7 +530,7 @@ public class UserInterface {
                 case "35":
                     System.out.println("Enter the index of the task you wish to set the end date: ");
                     num = scanner.nextInt();
-
+                    scanner.nextLine();
                     System.out.println("Enter new end date: ");
                     endDate = scanner.nextLine();
                     createdTasks.get(num).setEndDate(endDate);
@@ -546,7 +559,7 @@ public class UserInterface {
 
                     System.out.println("Give the index of the item you wish to add to a specific file: ");
                     num = scanner.nextInt() - 1;
-
+                    scanner.nextLine();
                     System.out.println("Enter the file path: ");
                     name = scanner.nextLine();
 
@@ -562,6 +575,7 @@ public class UserInterface {
 
                     System.out.println("Give the index of the item you wish to remove from a specific file: ");
                     num = scanner.nextInt() - 1;
+                    scanner.nextLine();
 
                     System.out.println("Enter the file name: ");
                     name = scanner.nextLine();

@@ -5,6 +5,9 @@ import org.example.files.classes.UserInterface;
 
 import java.util.Scanner;
 
+/**
+ * This class runs the user interactive methods.
+ */
 public class Main {
     public static void main(String[] args) {
         UserInterface userInterface = new UserInterface();

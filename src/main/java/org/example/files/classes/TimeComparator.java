@@ -1,4 +1,6 @@
-package org.example.files.classes.tasks;
+package org.example.files.classes;
+
+import org.example.files.classes.tasks.OneTimeTasks;
 
 import java.util.Comparator;
 
