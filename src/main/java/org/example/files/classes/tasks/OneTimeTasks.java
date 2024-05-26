@@ -64,12 +64,17 @@ public class OneTimeTasks extends Task {
      * @param tag the tag to check
      * @return true if the tag exists, false otherwise
      */
-    public boolean tagExists(String tag) {
+    public void tagExists(String tag) {
         List<String> temp = listOfTags;
         if (temp != null && tag != null) {
-            return temp.contains(tag.toUpperCase());
+            if (temp.contains(tag.toUpperCase())) {
+                System.out.println("Tag " + tag + " exists.");
+            } else {
+                System.out.println("Tag " + tag + " does not exist.");
+            }
+        } else {
+            System.out.println("Tag " + tag + " does not exist.");
         }
-        return false;
     }
 
     /**

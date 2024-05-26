@@ -3,6 +3,7 @@ package org.example.files.classes;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.Session;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,27 +21,21 @@ public class MessageSender {
     public static void main(String[] args) {
         MessageSender messageSender = new MessageSender();
 
-        // Define test email details
         String subject = "Test Email";
         String message = "This is a test email sent at a scheduled time.";
         String endDate = "23-05-2024"; // Tomorrow's date
         String endTime = "01:55:00";   // Noon
 
         try {
-            // Send the email
             messageSender.sendEmailAt(subject, message, endDate, endTime);
 
-            // Sleep for a while to allow the email to be sent (adjust the time if needed)
-            Thread.sleep(60000); // Sleep for 1 minute
+            Thread.sleep(60000);
 
         } catch (MessagingException | InterruptedException e) {
-            // Catch any exceptions and fail the test if an exception occurs
             e.printStackTrace();
             org.junit.Assert.fail("Exception occurred while sending the email.");
         }
 
-        // If the test reaches this point without throwing any exceptions, the email should have been sent successfully.
-        // You might add additional assertions or manual verification steps if needed.
     }
 
     private static final String EMAIL_FROM = "hacksmithinacoderverse@gmail.com";

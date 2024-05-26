@@ -40,17 +40,20 @@ public class TaskManager {
      * @param path The path where the file will be created.
      * @param fileName The name of the file to be created.
      */
-    public static void createFile(String path, String fileName) {
+    public static boolean createFile(String path, String fileName) {
         String filePath = path + File.separator + fileName;
         try {
             File file = new File(filePath);
             if (file.createNewFile()) {
                 logger.info("File created successfully: " + filePath);
+                return true;
             } else {
                 logger.info("File already exists: " + filePath);
+                return false;
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "An error occurred while creating file: " + filePath, e);
+            return false;
         }
     }
 

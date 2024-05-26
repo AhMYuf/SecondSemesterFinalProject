@@ -3,6 +3,9 @@ package org.example.files.classes.tasks;
 import org.example.files.classes.reference.CompletionStatus;
 import org.example.files.classes.reference.LevelOfImportance;
 
+/**
+ * This class is the parent of all task types (classes).
+ */
 abstract class Task {
     protected LevelOfImportance levelOfImportance;
     protected CompletionStatus completionStatus;

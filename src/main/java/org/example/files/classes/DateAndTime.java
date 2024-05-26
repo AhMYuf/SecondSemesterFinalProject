@@ -29,9 +29,6 @@ public class DateAndTime {
      */
     private String patternHour;
 
-    /**
-     * Constructs a DateAndTime object with default settings.
-     */
 
 
     /**
@@ -142,6 +139,31 @@ public class DateAndTime {
     }
 
     /**
+     * Checks if the given time string contains valid time values.
+     *
+     * @param time A string representing time in the format "HH:mm:ss".
+     * @return true if the time values are valid, false otherwise.
+     */
+    public static boolean isValidTimeValues(String time) {
+        try {
+            String[] parts = time.split(":");
+            int hours = Integer.parseInt(parts[0]);
+            int minutes = Integer.parseInt(parts[1]);
+            int seconds = Integer.parseInt(parts[2]);
+
+            if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60) {
+                return true;
+            } else {
+                System.out.println("Invalid time values. Hours must be between 0 and 23, minutes and seconds between 0 and 59.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid time values. Please ensure hours, minutes, and seconds are numeric.");
+            return false;
+        }
+    }
+
+    /**
      * Sets the time zone string.
      *
      * @param zoneId The time zone ID string.
@@ -189,6 +211,52 @@ public class DateAndTime {
 
         return "The difference in days: " + ChronoUnit.DAYS.between(now.toLocalDate(), date) + ".In terms of time it is, hours: " + totalHours + ", and minutes: " + remainingMinutes;
 
+    }
+
+    /**
+     * Checks if the given date string is in a valid date format "dd-MM-yyyy".
+     *
+     * @param date A string representing a date.
+     * @return true if the date string is in a valid format, false otherwise.
+     */
+    public static boolean isValidDateFormat(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            sdf.setLenient(false);
+            sdf.parse(date);
+            return true;
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please enter the date in the format dd-MM-yyyy.");
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the given time string is in a valid time format "HH:mm:ss".
+     *
+     * @param time A string representing a time.
+     * @return true if the time string is in a valid format, false otherwise.
+     */
+    public static boolean isValidTimeFormat(String time) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            sdf.setLenient(false);
+            sdf.parse(time);
+            return true;
+        } catch (ParseException e) {
+            System.out.println("Invalid time format. Please enter the time in the format HH:mm:ss.");
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the given date string is not null or empty.
+     *
+     * @param date A string representing a date.
+     * @return true if the date string is not null or empty, false otherwise.
+     */
+    public static boolean dateNotNull(String date) {
+        return date != null && !date.isEmpty();
     }
 
     /**
