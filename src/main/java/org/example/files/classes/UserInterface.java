@@ -630,7 +630,7 @@ public class UserInterface {
                             printList(createdTasks);
                             index = getTaskIndex("Give the index of the item you wish to remove from a specific file (1-based index): ", createdTasks);
 
-                            System.out.println("Enter the file name: ");
+                            System.out.println("Enter the file path: ");
                             name = scanner.nextLine();
 
                             System.out.println("Enter the file name: ");
