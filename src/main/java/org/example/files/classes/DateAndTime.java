@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 /**
  * This class handles operations related to date and time.
@@ -29,20 +30,6 @@ public class DateAndTime {
      */
     private String patternHour;
 
-
-
-    /**
-     * Constructs a DateAndTime object with the specified settings.
-     *
-     * @param zoneIdString The time zone ID string.
-     * @param patternDay   The pattern for day formatting.
-     * @param patternHour  The pattern for hour formatting.
-     */
-    public DateAndTime(String zoneIdString, String patternDay, String patternHour) {
-        this.zoneIdString = zoneIdString;
-        this.patternDay = patternDay;
-        this.patternHour = patternHour;
-    }
 
     /**
      * No parameter constructor
@@ -179,8 +166,16 @@ public class DateAndTime {
      * @return True if the date is valid for today, false otherwise.
      */
     public boolean dateValidToday(String dateString) {
-        return getDate(getZoneIdString()).equals(dateString);
-    }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        sdf.setLenient(false);
+        try {
+            Date date = sdf.parse(dateString);
+            Date today = new Date(); // Get today's date
+            return date.compareTo(today) >= 0; // Compare the entered date with today's date
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }    }
 
     /**
      * Compares a given date and time to the current date and time and returns the difference.
@@ -238,14 +233,17 @@ public class DateAndTime {
      * @return true if the time string is in a valid format, false otherwise.
      */
     public static boolean isValidTimeFormat(String time) {
+        if (time.length() != 8) {
+            return false;
+        }
+
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             sdf.setLenient(false);
             sdf.parse(time);
             return true;
         } catch (ParseException e) {
-            System.out.println("Invalid time format. Please enter the time in the format HH:mm:ss.");
-            return false;
+            return false; // Parsing failed, invalid time format
         }
     }
 
@@ -304,5 +302,8 @@ public class DateAndTime {
         this.patternHour = patternHour;
     }
 
+    public static void main(String[] args) {
+        System.out.println(isValidTimeFormat("12:34:56"));
+    }
 }
 

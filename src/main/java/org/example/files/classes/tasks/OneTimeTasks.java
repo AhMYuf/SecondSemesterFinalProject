@@ -110,7 +110,6 @@ public class OneTimeTasks extends Task {
                 ", shortDescription='" + shortDescription + '\'' +
                 ", date='" + startDate + '\'' +
                 ", time='" + startTime + '\'' +
-                ", dateAndTime=" + dateAndTime +
                 ", levelOfImportance=" + levelOfImportance +
                 ", completionStatus=" + completionStatus +
                 ", listOfTags=" + listOfTags +

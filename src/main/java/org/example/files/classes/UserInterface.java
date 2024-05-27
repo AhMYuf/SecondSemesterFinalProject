@@ -10,11 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.example.files.classes.DateAndTime.*;
+import static org.example.files.classes.DateAndTime.isValidTimeFormat;
 
 public class UserInterface {
     TaskManager taskManager;
     MessageSender messageSender;
-    UserDataSaving userDataSaving;
 
 
 
@@ -153,7 +153,7 @@ public class UserInterface {
      */
     public void printList(ArrayList<OneTimeTasks> createdTasks) {
         for (Object item : createdTasks) {
-            System.out.println(item);
+            System.out.println(item.toString());
         }
     }
 
@@ -218,15 +218,15 @@ public class UserInterface {
                             do {
                                 System.out.println("Please enter the date in a valid format (dd-MM-yyyy): ");
                                 date = scanner.nextLine();
-                            } while (!isValidDateFormat(date) || !dateNotNull(date));
+                            } while (!isValidDateFormat(date) && !dateNotNull(date));
 
-                            System.out.println("The entered date is: " + date);
+                            System.out.println("The entered date is: " + dateAndTime.dateExists(date));
                             break;
                         case "4":
                             do {
                                 System.out.println("Enter a date in a valid format (dd-MM-yyyy) to check if it has already past or has yet to come: ");
                                 date = scanner.nextLine();
-                            } while (!isValidDateFormat(date) || !dateNotNull(date));
+                            } while (!isValidDateFormat(date) && !dateNotNull(date));
                             System.out.println("The entered date is: " + dateAndTime.dateValidToday(date));
                             break;
                         case "5":
@@ -245,12 +245,12 @@ public class UserInterface {
                             do {
                                 System.out.println("Please enter the end date (dd-MM-yyyy): ");
                                 date = scanner.nextLine();
-                            } while (!isValidDateFormat(date) || !dateNotNull(date) || dateAndTime.dateValidToday(date));
+                            } while (!isValidDateFormat(date) && !dateNotNull(date) && !dateAndTime.dateValidToday(date));
 
                             do {
                                 System.out.println("Please enter the end time (HH:mm:ss): ");
                                 time = scanner.nextLine();
-                            } while (!isValidTimeFormat(time) || isValidTimeValues(time));
+                            } while (!isValidTimeFormat(time) && !isValidTimeValues(time));
                             System.out.println(dateAndTime.compareDateTime(date, time));
                             break;
                         case "8":
@@ -260,21 +260,16 @@ public class UserInterface {
                             System.out.println("The time pattern is: " + dateAndTime.getPatternHour());
                             break;
                         case "10":
-                            do {
                                 System.out.println("Please enter new date pattern: ");
                                 date = scanner.nextLine();
-                            } while (!isValidDateFormat(date));
-                            dateAndTime.setPatternDay(date);
-                            System.out.println("Your new day pattern has been set.");
-                            break;
+                                dateAndTime.setPatternDay(date);
+                                break;
                         case "11":
-                            do {
                                 System.out.println("Please enter new time pattern: ");
                                 time = scanner.nextLine();
-                            } while (!isValidTimeFormat(time) || isValidTimeValues(time));
-                            dateAndTime.setPatternHour(time);
-                            System.out.println("Your new time pattern has been set.");
-                            break;
+                                dateAndTime.setPatternHour(time);
+                                System.out.println("Your new time pattern has been set.");
+                                break;
                         default:
                             System.out.println("Unknown command: " + userInput);
                             break;
@@ -342,14 +337,17 @@ public class UserInterface {
                             String description = scanner.nextLine();
 
                             do {
-                                System.out.println("EndTime: ");
+                                System.out.println("End Time: ");
                                 endTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(endTime) || isValidTimeValues(endTime));
+                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
 
                             do {
                                 System.out.println("End Date: ");
                                 endDate = scanner.nextLine();
-                            } while (!isValidDateFormat(endDate) || !dateNotNull(endDate) || dateAndTime.dateValidToday(endDate));
+                                System.out.println(isValidDateFormat(endDate));
+                                System.out.println(dateNotNull(endDate));
+                                System.out.println(dateAndTime.dateValidToday(endDate));
+                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate) && !dateAndTime.dateValidToday(endDate));
 
 
                             System.out.println("Enter the number corresponding to the level of importance:");
@@ -380,33 +378,33 @@ public class UserInterface {
                             ArrayList<String> temp = new ArrayList<>();
                             for (int i = 0; i < num; i++) {
                                 System.out.println("Enter the tag(s): ");
-                                String tag = scanner.nextLine();
+                                String tag = scanner.nextLine().toUpperCase();
                                 temp.add(tag);
                             }
 
                             createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp, dateAndTime));
 
-                            System.out.println("Enter title of the message: ");
-                            String message = scanner.nextLine();
-
-                            do {
-                                System.out.println("Please enter the date that you want to receive the notification: ");
-                                endDate = scanner.nextLine();
-                            } while (!isValidDateFormat(endDate) || !dateNotNull(endDate) || dateAndTime.dateValidToday(endDate));
-
-
-                            do {
-                                System.out.println("Please enter the time you wish to be notified: ");
-                                endTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(endTime) || isValidTimeValues(endTime));
-
-                            System.out.println("Enter the message you wish to send: ");
-                            String subject = scanner.nextLine();
-                            try {
-                                messageSender.sendEmailAt(message, subject, endDate, endTime);
-                            } catch (MessagingException e) {
-                                System.out.println("Failed to send email: " + e.getMessage());
-                            }
+//                            System.out.println("Enter title of the message: ");
+//                            String message = scanner.nextLine();
+//
+//                            do {
+//                                System.out.println("Please enter the date that you want to receive the notification: ");
+//                                endDate = scanner.nextLine();
+//                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate) && !dateAndTime.dateValidToday(endDate));
+//
+//
+//                            do {
+//                                System.out.println("Please enter the time you wish to be notified: ");
+//                                endTime = scanner.nextLine();
+//                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
+//
+//                            System.out.println("Enter the message you wish to send: ");
+//                            String subject = scanner.nextLine();
+//                            try {
+//                                messageSender.sendEmailAt(message, subject, endDate, endTime);
+//                            } catch (MessagingException e) {
+//                                System.out.println("Failed to send email: " + e.getMessage());
+//                            }
                             break;
                         case "3":
                             System.out.print("Enter tag to add: ");
@@ -425,19 +423,34 @@ public class UserInterface {
                             break;
                         case "4":
                             System.out.print("Enter tag to remove: ");
-                            String tagToRemove = scanner.nextLine();
+                            String tagToRemove = scanner.nextLine().toUpperCase();
 
                             for (OneTimeTasks item : createdTasks) {
                                 System.out.println(item);
                             }
+
                             System.out.println("Please give the ID of task you wish to remove: ");
                             name = scanner.nextLine();
+
+                            boolean tagRemoved = false;
+
                             for (OneTimeTasks item : createdTasks) {
+                                System.out.println(item.getTaskId());
+                                System.out.println(name);
                                 if (item.getTaskId().equals(name)) {
-                                    item.getListOfTags().remove(tagToRemove.toUpperCase());
-                                } else {
-                                    System.out.println("The entered tag could not be found.");
+                                    if (item.getListOfTags().remove(tagToRemove)) {
+                                        System.out.println("Tag removed successfully.");
+                                        tagRemoved = true;
+                                        break;
+                                    } else {
+                                        System.out.println("The entered tag could not be found.");
+                                        tagRemoved = true; // Set flag to true
+                                        break;
+                                    }
                                 }
+                            }
+                            if (!tagRemoved) {
+                                System.out.println("The entered task ID does not exist.");
                             }
                             break;
                         case "5":
@@ -464,7 +477,7 @@ public class UserInterface {
                             do {
                                 System.out.print("Enter date to set: ");
                                 dateToSet = scanner.nextLine();
-                            } while (!isValidDateFormat(dateToSet) || !dateNotNull(dateToSet) || dateAndTime.dateValidToday(dateToSet));
+                            } while (!isValidDateFormat(dateToSet) && !dateNotNull(dateToSet) && !dateAndTime.dateValidToday(dateToSet));
 
                             System.out.println("Enter the task name you wish to modify: ");
                             name = scanner.nextLine();
@@ -481,12 +494,12 @@ public class UserInterface {
                             do {
                                 System.out.println("Please enter the end time (HH:mm:ss): ");
                                 endTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(endTime) || isValidTimeValues(endTime));
+                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
 
                             do {
                                 System.out.print("Enter start time (HH:mm:ss): ");
                                 startTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(startTime) || isValidTimeValues(startTime));
+                            } while (!isValidTimeFormat(startTime) && !isValidTimeValues(startTime));
 
                             scanner.nextLine();
                             dateAndTime.setTime(startTime, endTime);
@@ -496,17 +509,17 @@ public class UserInterface {
                             break;
                         case "10":
                             printList(createdTasks);
-                            index = getTaskIndex("Please enter the index of element you wish to get the ID: ", createdTasks);
+                            index = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks) +1;
                             System.out.println("Task ID: " + createdTasks.get(index).getTaskId());
                             break;
                         case "11":
                             printList(createdTasks);
-                            num = getTaskIndex("Please enter the index of element you wish to get the ID: ", createdTasks);
+                            num = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks) + 1;
                             System.out.println("Task Name: " + createdTasks.get(num).getTaskName());
                             break;
                         case "12":
                             printList(createdTasks);
-                            num = getTaskIndex("Enter the index of the task you wish to modify the name: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to modify the name (1-based index): ", createdTasks) + 1;
 
                             System.out.print("Enter new task name: ");
                             taskName = scanner.nextLine();
@@ -516,13 +529,13 @@ public class UserInterface {
                             break;
                         case "13":
                             printList(createdTasks);
-                            num = getTaskIndex("Enter the index of the task you wish to review the description: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to review the description (1-based index): ", createdTasks) + 1;
                             System.out.println("Short Description: " + createdTasks.get(num).getShortDescription());
                             break;
                         case "14":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to modify the description (1-based index): ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to modify the description (1-based index): ", createdTasks) + 1;
 
                             System.out.print("Enter new short description: ");
                             String shortDescription = scanner.nextLine();
@@ -531,76 +544,76 @@ public class UserInterface {
                         case "15":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) + 1;
                             System.out.println("Start Time: " + createdTasks.get(num).getStartTime());
                             break;
                         case "16":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) +1;
 
                             do {
                                 System.out.println("Enter new starting time: ");
                                 startTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(startTime) || isValidTimeValues(startTime));
+                            } while (!isValidTimeFormat(startTime) && !isValidTimeValues(startTime));
 
                             createdTasks.get(num).setStartTime(startTime);
                             break;
                         case "17":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) + 1;
                             System.out.println("Start Time: " + createdTasks.get(num).getStartDate());
                             break;
                         case "18":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the starting date: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to set the starting date (1-based index): ", createdTasks) + 1;
 
                             do {
                                 System.out.println("Enter new starting date: ");
                                 date = scanner.nextLine();
-                            } while (!isValidDateFormat(date) || !dateNotNull(date));
+                            } while (!isValidDateFormat(date) && !dateNotNull(date));
                             createdTasks.get(num).setStartDate(date);
                             break;
                         case "19":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the end time: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to get the end time (1-based index): ", createdTasks) + 1;
                             System.out.println("End Time: " + createdTasks.get(num).getEndTime());
                             break;
                         case "20":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the end time: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to set the end time (1-based index): ", createdTasks) + 1;
 
 
                             do {
                                 System.out.println("Enter new end time: ");
                                 endTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(endTime) || isValidTimeValues(endTime));
+                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
 
                             createdTasks.get(num).setEndTime(endTime);
                             break;
                         case "21":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the end date: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to get the end date (1-based index): ", createdTasks) + 1;
                             System.out.println("End Time: " + createdTasks.get(num).getEndDate());
                             break;
                         case "22":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the end date: ", createdTasks);
+                            num = getTaskIndex("Enter the index of the task you wish to set the end date (1-based index): ", createdTasks) + 1;
                             do {
                                 System.out.println("Enter new end date: ");
                                 endDate = scanner.nextLine();
-                            } while (!isValidDateFormat(endDate) || !dateNotNull(endDate));
+                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate));
                             createdTasks.get(num).setEndDate(endDate);
                             break;
                         case "23":
                             printList(createdTasks);
-                            num = getTaskIndex("Give the index of the item you wish to add to a specific file: ", createdTasks);
+                            num = getTaskIndex("Give the index of the item you wish to add to a specific file (1-based index): ", createdTasks) + 1;
 
                             System.out.println("Enter the file path: ");
                             name = scanner.nextLine();
@@ -612,7 +625,7 @@ public class UserInterface {
                             break;
                         case "24":
                             printList(createdTasks);
-                            index = getTaskIndex("Give the index of the item you wish to remove from a specific file: ", createdTasks);
+                            index = getTaskIndex("Give the index of the item you wish to remove from a specific file (1-based index): ", createdTasks) + 1;
 
                             System.out.println("Enter the file name: ");
                             name = scanner.nextLine();
@@ -623,7 +636,7 @@ public class UserInterface {
                             taskManager.removeTaskToFile(createdTasks.get(index), name, file);
                         case "25":
                             printList(createdTasks);
-                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance: ", createdTasks);
+                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks) + 1;
 
                             if (index >= 0 && index < createdTasks.size()) {
                                 System.out.println("Enter the number corresponding to the new level of importance: ");
@@ -646,7 +659,7 @@ public class UserInterface {
                             break;
                         case "26":
                             printList(createdTasks);
-                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance: ", createdTasks);
+                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks) + 1;
 
                             if (index >= 0 && index < createdTasks.size()) {
                                 System.out.println("Enter the number corresponding to the new completion status: ");
@@ -746,13 +759,13 @@ public class UserInterface {
                             do {
                                 System.out.println("Please enter the date that you want to receive the notification: ");
                                 endDate = scanner.nextLine();
-                            } while (!isValidDateFormat(endDate) || !dateNotNull(endDate));
+                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate));
 
 
                             do {
                                 System.out.println("Please enter the time you wish to be notified: ");
                                 endTime = scanner.nextLine();
-                            } while (!isValidTimeFormat(endTime) || isValidTimeValues(endTime));
+                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
 
                             System.out.println("Enter the message you wish to send: ");
                             String subject = scanner.nextLine();
