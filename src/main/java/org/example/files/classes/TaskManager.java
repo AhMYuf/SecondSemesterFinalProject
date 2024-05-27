@@ -2,8 +2,14 @@ package org.example.files.classes;
 
 import org.example.files.classes.tasks.OneTimeTasks;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,55 +71,56 @@ public class TaskManager {
      * @param fileName The name of the file to which the task will be added.
      */
     public void addTaskToFile(OneTimeTasks task, String path, String fileName) {
-        List<OneTimeTasks> tasks = getAllTasks(path, fileName);
-        tasks.add(task);
-        saveTasks(tasks, path, fileName);
+        String filePath = path + File.separator + fileName;
+        Path fPath = Paths.get(filePath);
+        try {
+            appendToFile(fPath,task.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        logger.info("Tasks after adding: " + task);
     }
 
     /**
      * Removes a task from the specified file.
      *
+     * @param tasks       The list of tasks from which the task will be removed.
      * @param taskToRemove The task to be removed.
      * @param path         The path where the file is located.
      * @param fileName     The name of the file from which the task will be removed.
      */
-    public void removeTaskToFile(OneTimeTasks taskToRemove, String path, String fileName) {
-        List<OneTimeTasks> tasks = getAllTasks(path, fileName);
-        tasks.removeIf(task -> task.equals(taskToRemove));
-        saveTasks(tasks, path, fileName);
-    }
-
-    /**
-     * Loads tasks from the specified file.
-     *
-     * @param path     The path where the file is located.
-     * @param fileName The name of the file from which tasks will be loaded.
-     * @return The list of tasks loaded from the file.
-     */
-    private static List<OneTimeTasks> getAllTasks(String path, String fileName) {
-        List<OneTimeTasks> tasks = new ArrayList<>();
+    public void removeTaskToFile(List<OneTimeTasks> tasks, OneTimeTasks taskToRemove, String path, String fileName) {
         String filePath = path + File.separator + fileName;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            tasks = (List<OneTimeTasks>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Error occurred while reading tasks from file: " + filePath, e);
-        }
-        return tasks;
-    }
 
-    /**
-     * Saves tasks to the specified file.
-     *
-     * @param tasks    The list of tasks to be saved.
-     * @param path     The path where the file is located.
-     * @param fileName The name of the file to which tasks will be saved.
-     */
-    private static void saveTasks(List<OneTimeTasks> tasks, String path, String fileName) {
-        String filePath = path + File.separator + fileName;
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-            oos.writeObject(tasks);
+        try {
+            new FileWriter(filePath, false).close();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error occurred while saving tasks to file: " + filePath, e);
+            throw new RuntimeException(e);
         }
+        Path fPath = Paths.get(filePath);
+        tasks.remove(taskToRemove);
+
+        for (OneTimeTasks task: tasks) {
+            try {
+                appendToFile(fPath, task.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+       logger.info("Tasks after removing: " + tasks);
+    }
+
+    /**
+     * Appends content to a file located at the specified path.
+     *
+     * @param path     The path where the file is located.
+     * @param content  The content to be appended to the file.
+     * @throws IOException If an I/O error occurs while appending to the file.
+     */
+    private static void appendToFile(Path path, String content)
+            throws IOException {
+        Files.write(path, content.getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND);
     }
 }

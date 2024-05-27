@@ -13,7 +13,7 @@ import static org.example.files.classes.DateAndTime.*;
 import static org.example.files.classes.DateAndTime.isValidTimeFormat;
 
 public class UserInterface {
-    TaskManager taskManager;
+
     MessageSender messageSender;
 
 
@@ -142,9 +142,10 @@ public class UserInterface {
             if (number < 1 || number > createdTasks.size()) {
                 System.out.println("Invalid index. Please enter an index between 1 and " + createdTasks.size() + ".");
             }
-        } while (number < 0 || number >= createdTasks.size());
+        } while (number < 1 || number > createdTasks.size());
         return number;
     }
+
 
     /**
      * Prints the list of OneTimeTasks.
@@ -163,6 +164,7 @@ public class UserInterface {
     public void loop()  {
         Scanner scanner = new Scanner(System.in);
         DateAndTime dateAndTime = new DateAndTime();
+        TaskManager taskManager = new TaskManager();
         ArrayList<OneTimeTasks> createdTasks = new ArrayList<>();
 
         String userInput = "";
@@ -327,7 +329,6 @@ public class UserInterface {
                             }
                             break;
                         case "2":
-                            MessageSender messageSender = new MessageSender();
                             System.out.println("Please enter the required information for your task: ");
 
                             System.out.println("Task name: ");
@@ -509,83 +510,83 @@ public class UserInterface {
                             break;
                         case "10":
                             printList(createdTasks);
-                            index = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks) +1;
-                            System.out.println("Task ID: " + createdTasks.get(index).getTaskId());
+                            index = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks);
+                            System.out.println("Task ID: " + createdTasks.get(index - 1).getTaskId());
                             break;
                         case "11":
                             printList(createdTasks);
-                            num = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks) + 1;
-                            System.out.println("Task Name: " + createdTasks.get(num).getTaskName());
+                            num = getTaskIndex("Please enter the index of element you wish to get the ID (1-based index): ", createdTasks);
+                            System.out.println("Task Name: " + createdTasks.get(num - 1).getTaskName());
                             break;
                         case "12":
                             printList(createdTasks);
-                            num = getTaskIndex("Enter the index of the task you wish to modify the name (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Enter the index of the task you wish to modify the name (1-based index): ", createdTasks);
 
                             System.out.print("Enter new task name: ");
                             taskName = scanner.nextLine();
 
-                            createdTasks.get(num).setTaskName(taskName);
+                            createdTasks.get(num - 1).setTaskName(taskName);
                             System.out.println("Task Name: " + taskName);
                             break;
                         case "13":
                             printList(createdTasks);
-                            num = getTaskIndex("Enter the index of the task you wish to review the description (1-based index): ", createdTasks) + 1;
-                            System.out.println("Short Description: " + createdTasks.get(num).getShortDescription());
+                            num = getTaskIndex("Enter the index of the task you wish to review the description (1-based index): ", createdTasks);
+                            System.out.println("Short Description: " + createdTasks.get(num - 1).getShortDescription());
                             break;
                         case "14":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to modify the description (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Enter the index of the task you wish to modify the description (1-based index): ", createdTasks);
 
                             System.out.print("Enter new short description: ");
                             String shortDescription = scanner.nextLine();
-                            createdTasks.get(num).setShortDescription(shortDescription);
+                            createdTasks.get(num -1).setShortDescription(shortDescription);
                             break;
                         case "15":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) + 1;
-                            System.out.println("Start Time: " + createdTasks.get(num).getStartTime());
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks);
+                            System.out.println("Start Time: " + createdTasks.get(num - 1).getStartTime());
                             break;
                         case "16":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) +1;
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks);
 
                             do {
                                 System.out.println("Enter new starting time: ");
                                 startTime = scanner.nextLine();
                             } while (!isValidTimeFormat(startTime) && !isValidTimeValues(startTime));
 
-                            createdTasks.get(num).setStartTime(startTime);
+                            createdTasks.get(num -1).setStartTime(startTime);
                             break;
                         case "17":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks) + 1;
-                            System.out.println("Start Time: " + createdTasks.get(num).getStartDate());
+                            num = getTaskIndex("Enter the index of the task you wish to get the starting time (1-based index): ", createdTasks);
+                            System.out.println("Start Time: " + createdTasks.get(num - 1).getStartDate());
                             break;
                         case "18":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the starting date (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Enter the index of the task you wish to set the starting date (1-based index): ", createdTasks);
 
                             do {
                                 System.out.println("Enter new starting date: ");
                                 date = scanner.nextLine();
                             } while (!isValidDateFormat(date) && !dateNotNull(date));
-                            createdTasks.get(num).setStartDate(date);
+                            createdTasks.get(num - 1).setStartDate(date);
                             break;
                         case "19":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the end time (1-based index): ", createdTasks) + 1;
-                            System.out.println("End Time: " + createdTasks.get(num).getEndTime());
+                            num = getTaskIndex("Enter the index of the task you wish to get the end time (1-based index): ", createdTasks);
+                            System.out.println("End Time: " + createdTasks.get(num - 1).getEndTime());
                             break;
                         case "20":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the end time (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Enter the index of the task you wish to set the end time (1-based index): ", createdTasks);
 
 
                             do {
@@ -593,39 +594,41 @@ public class UserInterface {
                                 endTime = scanner.nextLine();
                             } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
 
-                            createdTasks.get(num).setEndTime(endTime);
+                            createdTasks.get(num - 1).setEndTime(endTime);
                             break;
                         case "21":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to get the end date (1-based index): ", createdTasks) + 1;
-                            System.out.println("End Time: " + createdTasks.get(num).getEndDate());
+                            num = getTaskIndex("Enter the index of the task you wish to get the end date (1-based index): ", createdTasks);
+                            System.out.println("End Time: " + createdTasks.get(num - 1).getEndDate());
                             break;
                         case "22":
                             printList(createdTasks);
 
-                            num = getTaskIndex("Enter the index of the task you wish to set the end date (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Enter the index of the task you wish to set the end date (1-based index): ", createdTasks);
                             do {
                                 System.out.println("Enter new end date: ");
                                 endDate = scanner.nextLine();
                             } while (!isValidDateFormat(endDate) && !dateNotNull(endDate));
-                            createdTasks.get(num).setEndDate(endDate);
+                            createdTasks.get(num - 1).setEndDate(endDate);
                             break;
                         case "23":
+
                             printList(createdTasks);
-                            num = getTaskIndex("Give the index of the item you wish to add to a specific file (1-based index): ", createdTasks) + 1;
+                            num = getTaskIndex("Give the index of the item you wish to add to a specific file (1-based index): ", createdTasks);
 
                             System.out.println("Enter the file path: ");
                             name = scanner.nextLine();
 
                             System.out.println("Enter the file name: ");
-                            file = scanner.nextLine() + ".txt";
+                            file = scanner.nextLine();
 
-                            taskManager.addTaskToFile(createdTasks.get(num), name, file);
+                            taskManager.addTaskToFile(createdTasks.get(num - 1), name, file);
                             break;
                         case "24":
+
                             printList(createdTasks);
-                            index = getTaskIndex("Give the index of the item you wish to remove from a specific file (1-based index): ", createdTasks) + 1;
+                            index = getTaskIndex("Give the index of the item you wish to remove from a specific file (1-based index): ", createdTasks);
 
                             System.out.println("Enter the file name: ");
                             name = scanner.nextLine();
@@ -633,10 +636,10 @@ public class UserInterface {
                             System.out.println("Enter the file name: ");
                             file = scanner.nextLine() + ".txt";
 
-                            taskManager.removeTaskToFile(createdTasks.get(index), name, file);
+                            taskManager.removeTaskToFile(createdTasks, createdTasks.get(index - 1), name, file);
                         case "25":
                             printList(createdTasks);
-                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks) + 1;
+                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks);
 
                             if (index >= 0 && index < createdTasks.size()) {
                                 System.out.println("Enter the number corresponding to the new level of importance: ");
@@ -659,7 +662,7 @@ public class UserInterface {
                             break;
                         case "26":
                             printList(createdTasks);
-                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks) + 1;
+                            index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks);
 
                             if (index >= 0 && index < createdTasks.size()) {
                                 System.out.println("Enter the number corresponding to the new completion status: ");

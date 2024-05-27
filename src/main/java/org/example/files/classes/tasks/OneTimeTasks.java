@@ -2,13 +2,14 @@ package org.example.files.classes.tasks;
 
 import org.example.files.classes.DateAndTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a one-time task.
  */
-public class OneTimeTasks extends Task {
+public class OneTimeTasks extends Task implements Serializable {
     private static int nextId = 1;
     private String taskId;
     private String taskName;
