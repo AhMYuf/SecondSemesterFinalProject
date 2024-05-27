@@ -329,6 +329,7 @@ public class UserInterface {
                             }
                             break;
                         case "2":
+                            MessageSender messageSender = new MessageSender();
                             System.out.println("Please enter the required information for your task: ");
 
                             System.out.println("Task name: ");
@@ -345,9 +346,6 @@ public class UserInterface {
                             do {
                                 System.out.println("End Date: ");
                                 endDate = scanner.nextLine();
-                                System.out.println(isValidDateFormat(endDate));
-                                System.out.println(dateNotNull(endDate));
-                                System.out.println(dateAndTime.dateValidToday(endDate));
                             } while (!isValidDateFormat(endDate) && !dateNotNull(endDate) && !dateAndTime.dateValidToday(endDate));
 
 
@@ -637,6 +635,7 @@ public class UserInterface {
                             file = scanner.nextLine() + ".txt";
 
                             taskManager.removeTaskToFile(createdTasks, createdTasks.get(index - 1), name, file);
+                            break;
                         case "25":
                             printList(createdTasks);
                             index = getTaskIndex("Enter the index of the task you wish to modify the level of importance (1-based index): ", createdTasks);

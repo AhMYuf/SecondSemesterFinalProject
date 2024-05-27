@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         UserInterface userInterface = new UserInterface();
+        System.out.println("If this is your first time using, please first create an folder and file to store all your tasks (minimum).");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose one of the option: '1' for entering personal information, '2' for running the demo");
         int choice = scanner.nextInt();
