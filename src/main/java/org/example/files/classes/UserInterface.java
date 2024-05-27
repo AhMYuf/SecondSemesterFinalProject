@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.example.files.classes.DateAndTime.*;
-import static org.example.files.classes.DateAndTime.isValidTimeFormat;
 
 public class UserInterface {
 
@@ -281,7 +280,7 @@ public class UserInterface {
                     System.out.println("Please enter the number of action you wish to perform: ");
                     System.out.println("""
                             1. Sort created tasks by dates and times.
-                            2. Create a new task and send a message.
+                            2. Create a new task.
                             3. Add a tag to a task.
                             4. Remove a tag from a task.
                             5. Display tags of all tasks.
@@ -382,28 +381,6 @@ public class UserInterface {
                             }
 
                             createdTasks.add(new OneTimeTasks(taskName, description, endTime, endDate, levelOfImp, CompStat, temp, dateAndTime));
-
-//                            System.out.println("Enter title of the message: ");
-//                            String message = scanner.nextLine();
-//
-//                            do {
-//                                System.out.println("Please enter the date that you want to receive the notification: ");
-//                                endDate = scanner.nextLine();
-//                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate) && !dateAndTime.dateValidToday(endDate));
-//
-//
-//                            do {
-//                                System.out.println("Please enter the time you wish to be notified: ");
-//                                endTime = scanner.nextLine();
-//                            } while (!isValidTimeFormat(endTime) && !isValidTimeValues(endTime));
-//
-//                            System.out.println("Enter the message you wish to send: ");
-//                            String subject = scanner.nextLine();
-//                            try {
-//                                messageSender.sendEmailAt(message, subject, endDate, endTime);
-//                            } catch (MessagingException e) {
-//                                System.out.println("Failed to send email: " + e.getMessage());
-//                            }
                             break;
                         case "3":
                             System.out.print("Enter tag to add: ");
@@ -761,7 +738,7 @@ public class UserInterface {
                             do {
                                 System.out.println("Please enter the date that you want to receive the notification: ");
                                 endDate = scanner.nextLine();
-                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate));
+                            } while (!isValidDateFormat(endDate) && !dateNotNull(endDate) && !dateAndTime.dateValidToday(endDate));
 
 
                             do {
@@ -776,6 +753,7 @@ public class UserInterface {
                             } catch (MessagingException e) {
                                 System.out.println("Failed to send email: " + e.getMessage());
                             }
+                            break;
                         default:
                             System.out.println("Unknown command: " + userInput);
                             break;
